@@ -1,148 +1,139 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Dylan's Residential Services — Business Manager</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="theme-color" content="#1373e6">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Dylan's Residential Services - Business Manager</title>
+
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f3f6f8;color:#17202a}
-header{background:#15202b;color:#fff;padding:18px 16px}header h1{margin:0 0 5px;font-size:22px}
-nav{display:flex;gap:7px;overflow:auto;background:#fff;padding:10px;position:sticky;top:0;z-index:5;border-bottom:1px solid #ddd}
-nav button{white-space:nowrap}.btn{border:0;border-radius:8px;padding:10px 13px;background:#1769aa;color:white;font-weight:600;cursor:pointer}.secondary{background:#e8edf1;color:#17202a}.danger{background:#c62828}.success{background:#16803c}
-main{max-width:1100px;margin:auto;padding:15px}.page{display:none}.page.active{display:block}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}.card{background:white;border-radius:12px;padding:15px;box-shadow:0 2px 8px #dfe4e8;margin-bottom:12px}
-.metric .label{font-size:13px;color:#65717d}.metric .value{font-size:26px;font-weight:700;margin-top:6px}
-input,select,textarea{width:100%;padding:11px;margin:5px 0 12px;border:1px solid #ccd3d9;border-radius:7px;font:inherit}
-.row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}.actions{display:flex;gap:7px;flex-wrap:wrap}
-.badge{display:inline-block;padding:4px 8px;border-radius:20px;background:#eef2f5;font-size:12px}.paid{background:#dff3e5;color:#176b35}.unpaid{background:#fff0d5;color:#8a5600}
-table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:10px;border-bottom:1px solid #eee;vertical-align:top}.muted{color:#697680;font-size:13px}
-h2{margin-top:8px}.empty{padding:20px;text-align:center;color:#77838c}
-</style>
-<link rel="manifest" href="manifest.webmanifest">
-<meta name="theme-color" content="#15202b">
-</head>
-<body>
-<header>
-<h1>Dylan's Residential Services</h1>
-<div style="color:#cbd4db;font-size:13px">Cleaning Business Manager • ABN 25 447 605 581</div>
-</header>
-<nav>
-<button class="btn" onclick="show('dashboard')">Dashboard</button>
-<button class="btn secondary" onclick="show('jobs')">Jobs</button>
-<button class="btn secondary" onclick="show('clients')">Clients</button>
-<button class="btn secondary" onclick="show('quotes')">Estimates</button>
-<button class="btn secondary" onclick="show('invoices')">Invoices</button>
-<button class="btn secondary" onclick="show('expenses')">Expenses</button>
-</nav>
+*{box-sizing:border-box}
 
-<main>
-<section id="dashboard" class="page active">
-<h2>Business Dashboard</h2>
-<div class="grid">
-<div class="card metric"><div class="label">Paid earnings</div><div class="value" id="mPaid">$0</div></div>
-<div class="card metric"><div class="label">Unpaid invoices</div><div class="value" id="mUnpaid">$0</div></div>
-<div class="card metric"><div class="label">Expenses</div><div class="value" id="mExpenses">$0</div></div>
-<div class="card metric"><div class="label">Profit</div><div class="value" id="mProfit">$0</div></div>
-</div>
-<div class="card"><h3>Upcoming cleaning jobs</h3><div id="upcoming"></div></div>
-<div class="card"><h3>Quick actions</h3><div class="actions">
-<button class="btn" onclick="show('jobs')">+ New cleaning job</button>
-<button class="btn" onclick="show('quotes')">+ New estimate</button>
-<button class="btn" onclick="show('invoices')">+ New invoice</button>
-<button class="btn" onclick="show('expenses')">+ Add expense</button>
-</div></div>
-</section>
-
-<section id="jobs" class="page">
-<h2>Cleaning Jobs</h2>
-<div class="card">
-<form id="jobForm">
-<div class="row"><div><label>Client</label><select id="jobClient" required></select></div><div><label>Date</label><input id="jobDate" type="date" required></div><div><label>Time</label><input id="jobTime" type="time"></div></div>
-<div class="row"><div><label>Cleaning type</label><select id="jobType"><option>Regular cleaning</option><option>Deep cleaning</option><option>Bond cleaning</option><option>Real-estate cleaning</option><option>Move-in / move-out</option><option>Other</option></select></div><div><label>Price</label><input id="jobPrice" type="number" step="0.01" required></div></div>
-<label>Job notes / access instructions</label><textarea id="jobNotes" placeholder="Keys, pets, special requests, areas requiring attention..."></textarea>
-<button class="btn">Add job</button>
-</form></div>
-<div id="jobList"></div>
-</section>
-
-<section id="clients" class="page">
-<h2>Clients & Properties</h2>
-<div class="card"><form id="clientForm">
-<div class="row"><div><label>Client name</label><input id="cName" required></div><div><label>Phone</label><input id="cPhone"></div><div><label>Email</label><input id="cEmail" type="email"></div></div>
-<label>Property address</label><input id="cAddress">
-<label>Property notes</label><textarea id="cNotes" placeholder="Bedrooms, bathrooms, pets, special requirements..."></textarea>
-<button class="btn">Add client</button>
-</form></div><div id="clientList"></div>
-</section>
-
-<section id="quotes" class="page">
-<h2>Cleaning Estimates</h2>
-<div class="card"><form id="quoteForm">
-<div class="row"><div><label>Client</label><select id="quoteClient" required></select></div><div><label>Cleaning type</label><select id="quoteType"><option>Regular cleaning</option><option>Deep cleaning</option><option>Bond cleaning</option><option>Real-estate cleaning</option><option>Move-in / move-out</option><option>Other</option></select></div></div>
-<div class="row"><div><label>Property size / details</label><input id="quoteDetails" placeholder="e.g. 4 bed, 2 bath"></div><div><label>Estimate amount</label><input id="quoteAmount" type="number" step="0.01" required></div></div>
-<label>What's included</label><textarea id="quoteIncludes" placeholder="Bathrooms, kitchen, floors, dusting, windows, etc."></textarea>
-<button class="btn">Create estimate</button>
-</form></div><div id="quoteList"></div>
-</section>
-
-<section id="invoices" class="page">
-<h2>Invoices & Receipts</h2>
-<div class="card"><form id="invoiceForm">
-<div class="row"><div><label>Client</label><select id="invoiceClient" required></select></div><div><label>Cleaning job</label><select id="invoiceJob"></select></div></div>
-<div class="row"><div><label>Description</label><input id="invoiceDesc" placeholder="Bond clean — 4 bedroom property" required></div><div><label>Amount</label><input id="invoiceAmount" type="number" step="0.01" required></div></div>
-<button class="btn">Create invoice</button>
-</form></div><div id="invoiceList"></div>
-</section>
-
-<section id="expenses" class="page">
-<h2>Business Expenses</h2>
-<div class="card"><form id="expenseForm">
-<div class="row"><div><label>Date</label><input id="expenseDate" type="date"></div><div><label>Category</label><select id="expenseCat"><option>Cleaning supplies</option><option>Equipment</option><option>Fuel / travel</option><option>Advertising</option><option>Insurance</option><option>Phone / internet</option><option>Other</option></select></div><div><label>Amount</label><input id="expenseAmount" type="number" step="0.01" required></div></div>
-<label>Description</label><input id="expenseDesc" placeholder="e.g. Mop heads and chemicals" required>
-<button class="btn">Add expense</button>
-</form></div><div id="expenseList"></div>
-</section>
-</main>
-
-<script>
-const KEY='dylanCleaningV2';
-let db=JSON.parse(localStorage.getItem(KEY)||'{"clients":[],"jobs":[],"quotes":[],"invoices":[],"expenses":[]}');
-const $=id=>document.getElementById(id);
-const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-const money=n=>new Intl.NumberFormat('en-AU',{style:'currency',currency:'AUD'}).format(n||0);
-const today=()=>new Date().toISOString().slice(0,10);
-function save(){localStorage.setItem(KEY,JSON.stringify(db));render()}
-function show(id){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));$(id).classList.add('active');render()}
-function client(id){return db.clients.find(c=>c.id==id)||{name:'Unknown',address:''}}
-function fillClients(){
-  ['jobClient','quoteClient','invoiceClient'].forEach(id=>$(id).innerHTML='<option value="">Select client</option>'+db.clients.map(c=>`<option value="${c.id}">${esc(c.name)} — ${esc(c.address)}</option>`).join(''));
-  $('invoiceJob').innerHTML='<option value="">No linked job</option>'+db.jobs.map(j=>`<option value="${j.id}">${j.date} — ${esc(client(j.client).name)} — ${esc(j.type)}</option>`).join('');
+:root{
+  --blue:#1373e6;
+  --blue2:#0d5fc5;
+  --green:#16a34a;
+  --red:#dc2626;
+  --orange:#ea580c;
+  --purple:#7c3aed;
+  --bg:#0f1115;
+  --panel:#181b21;
+  --panel2:#20242c;
+  --border:#343944;
+  --text:#f4f6f8;
+  --muted:#aab1bd;
+  --input:#11141a;
+  --shadow:0 8px 30px rgba(0,0,0,.25);
 }
-function remove(type,id){db[type]=db[type].filter(x=>x.id!=id);save()}
-$('clientForm').onsubmit=e=>{e.preventDefault();db.clients.push({id:Date.now(),name:$('cName').value,phone:$('cPhone').value,email:$('cEmail').value,address:$('cAddress').value,notes:$('cNotes').value});e.target.reset();save()}
-$('jobForm').onsubmit=e=>{e.preventDefault();db.jobs.push({id:Date.now(),client:+$('jobClient').value,date:$('jobDate').value,time:$('jobTime').value,type:$('jobType').value,price:+$('jobPrice').value,notes:$('jobNotes').value,status:'Booked'});e.target.reset();save()}
-$('quoteForm').onsubmit=e=>{e.preventDefault();db.quotes.push({id:Date.now(),client:+$('quoteClient').value,type:$('quoteType').value,details:$('quoteDetails').value,amount:+$('quoteAmount').value,includes:$('quoteIncludes').value,status:'Draft',date:today()});e.target.reset();save()}
-$('invoiceForm').onsubmit=e=>{e.preventDefault();db.invoices.push({id:Date.now(),client:+$('invoiceClient').value,job:+$('invoiceJob').value,desc:$('invoiceDesc').value,amount:+$('invoiceAmount').value,status:'Unpaid',date:today()});e.target.reset();save()}
-$('expenseForm').onsubmit=e=>{e.preventDefault();db.expenses.push({id:Date.now(),date:$('expenseDate').value||today(),cat:$('expenseCat').value,amount:+$('expenseAmount').value,desc:$('expenseDesc').value});e.target.reset();save()}
-function markPaid(id){let x=db.invoices.find(i=>i.id==id);x.status='Paid';x.paidDate=today();x.receiptNo='R-'+x.id;save();alert('Payment recorded. Receipt '+x.receiptNo+' has been generated.')}
-function printReceipt(id){
- let x=db.invoices.find(i=>i.id==id),c=client(x.client);
- let w=window.open('','_blank');
- w.document.write(`<html><body style="font-family:Arial;padding:40px"><h1>RECEIPT</h1><h2>Dylan's Residential Services</h2><p>0413 831 368<br>dylansresidentialservices@gmail.com<br>ABN 25 447 605 581</p><hr><p><b>Receipt:</b> ${esc(x.receiptNo)}<br><b>Paid:</b> ${esc(x.paidDate)}<br><b>Client:</b> ${esc(c.name)}<br><b>Property:</b> ${esc(c.address)}</p><h2>${esc(x.desc)}</h2><h2>${money(x.amount)}</h2><p>Payment received. Thank you for choosing Dylan's Residential Services.</p></body></html>`); setTimeout(()=>w.print(),250);
- w.document.close()
+
+body{
+  margin:0;
+  font-family:Arial,Helvetica,sans-serif;
+  background:var(--bg);
+  color:var(--text);
 }
-function render(){
- fillClients();
- $('clientList').innerHTML=db.clients.length?'<div class="card"><table><tr><th>Client</th><th>Contact</th><th>Property</th><th></th></tr>'+db.clients.map(c=>`<tr><td><b>${esc(c.name)}</b><br><span class="muted">${esc(c.notes)}</span></td><td>${esc(c.phone)}<br>${esc(c.email)}</td><td>${esc(c.address)}</td><td><button class="btn danger" onclick="remove('clients',${c.id})">Delete</button></td></tr>`).join('')+'</table></div>':'<div class="empty">No clients yet.</div>';
- $('jobList').innerHTML=db.jobs.slice().sort((a,b)=>a.date.localeCompare(b.date)).map(j=>`<div class="card"><b>${esc(j.type)}</b> — ${esc(client(j.client).name)}<br>${esc(j.date)} ${esc(j.time)} — ${money(j.price)}<br><span class="badge">${esc(j.status)}</span> <span class="muted">${esc(client(j.client).address)}</span><p>${esc(j.notes)}</p><button class="btn danger" onclick="remove('jobs',${j.id})">Delete</button></div>`).join('')||'<div class="empty">No jobs yet.</div>';
- $('quoteList').innerHTML=db.quotes.slice().reverse().map(q=>`<div class="card"><b>Estimate #${q.id}</b> — ${esc(client(q.client).name)}<br>${esc(q.type)} • ${esc(q.details)} • <b>${money(q.amount)}</b><br><span class="badge">${q.status}</span><p>${esc(q.includes)}</p><button class="btn danger" onclick="remove('quotes',${q.id})">Delete</button></div>`).join('')||'<div class="empty">No estimates yet.</div>';
- $('invoiceList').innerHTML=db.invoices.slice().reverse().map(i=>`<div class="card"><b>Invoice #${i.id}</b> — ${esc(client(i.client).name)}<br>${esc(i.desc)} — <b>${money(i.amount)}</b><br><span class="badge ${i.status==='Paid'?'paid':'unpaid'}">${i.status}</span> ${i.paidDate?'Paid '+i.paidDate+' • Receipt '+i.receiptNo:''}<div class="actions" style="margin-top:10px">${i.status!=='Paid'?`<button class="btn success" onclick="markPaid(${i.id})">Mark paid + generate receipt</button>`:`<button class="btn" onclick="printReceipt(${i.id})">Print receipt</button>`}<button class="btn danger" onclick="remove('invoices',${i.id})">Delete</button></div></div>`).join('')||'<div class="empty">No invoices yet.</div>';
- $('expenseList').innerHTML=db.expenses.slice().reverse().map(x=>`<div class="card"><b>${money(x.amount)}</b> — ${esc(x.cat)}<br>${esc(x.desc)} <span class="muted">${x.date}</span><button class="btn danger" style="float:right" onclick="remove('expenses',${x.id})">Delete</button><div style="clear:both"></div></div>`).join('')||'<div class="empty">No expenses yet.</div>';
- let paid=db.invoices.filter(x=>x.status==='Paid').reduce((a,x)=>a+x.amount,0),unpaid=db.invoices.filter(x=>x.status!=='Paid').reduce((a,x)=>a+x.amount,0),exp=db.expenses.reduce((a,x)=>a+x.amount,0);
- $('mPaid').textContent=money(paid);$('mUnpaid').textContent=money(unpaid);$('mExpenses').textContent=money(exp);$('mProfit').textContent=money(paid-exp);
- $('upcoming').innerHTML=db.jobs.filter(j=>j.date>=today()).sort((a,b)=>a.date.localeCompare(b.date)).slice(0,8).map(j=>`<div class="card"><b>${j.date}</b> ${esc(j.time)} — ${esc(client(j.client).name)} — ${esc(j.type)} — ${money(j.price)}</div>`).join('')||'<div class="empty">No upcoming jobs.</div>';
+
+button,input,select,textarea{
+  font:inherit;
 }
-$('jobDate').value=today();$('expenseDate').value=today();render();
-</script>
-<script>if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js'));}</script>
-</body></html>
+
+button{
+  cursor:pointer;
+}
+
+.app{
+  min-height:100vh;
+}
+
+header{
+  position:sticky;
+  top:0;
+  z-index:100;
+  background:#15181e;
+  border-bottom:1px solid var(--border);
+  padding:14px 18px;
+  box-shadow:var(--shadow);
+}
+
+.header-inner{
+  max-width:1250px;
+  margin:auto;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+}
+
+.brand h1{
+  margin:0;
+  font-size:22px;
+}
+
+.brand p{
+  margin:4px 0 0;
+  color:var(--muted);
+  font-size:12px;
+}
+
+.menu-btn{
+  display:none;
+  background:var(--panel2);
+  color:white;
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:9px 12px;
+  font-size:20px;
+}
+
+nav{
+  display:flex;
+  gap:7px;
+  flex-wrap:wrap;
+}
+
+.nav-btn{
+  border:1px solid var(--border);
+  background:var(--panel2);
+  color:#dce2ea;
+  padding:10px 13px;
+  border-radius:8px;
+}
+
+.nav-btn:hover,
+.nav-btn.active{
+  background:var(--blue);
+  border-color:var(--blue);
+  color:white;
+}
+
+main{
+  max-width:1250px;
+  margin:auto;
+  padding:25px 18px 60px;
+}
+
+.page{
+  display:none;
+}
+
+.page.active{
+  display:block;
+}
+
+.page-title{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+  margin-bottom:20px;
+}
+
+.page-title h2{
+  margin:0;
+  font-size:25px;
+}
+
+.page-title p{
+  color:var(--
