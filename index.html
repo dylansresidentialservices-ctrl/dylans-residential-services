@@ -3135,7 +3135,357 @@ console.log(
 );
 
 </script>
+<script>
+/* =========================================================
+   JOB EDIT BUTTON
+   Adds an Edit button to existing cleaning jobs.
+   ========================================================= */
 
+(function () {
+  "use strict";
+
+  function findJobsStorage() {
+    const possibleKeys = [
+      "jobs",
+      "cleaningJobs",
+      "dylanJobs",
+      "drsJobs",
+      "businessData",
+      "appData"
+    ];
+
+    for (const key of possibleKeys) {
+      try {
+        const value = localStorage.getItem(key);
+        if (!value) continue;
+
+        const data = JSON.parse(value);
+
+        if (Array.isArray(data)) {
+          if (
+            data.length === 0 ||
+            data.some(item =>
+              item &&
+              typeof item === "object" &&
+              (
+                "client" in item ||
+                "clientId" in item ||
+                "date" in item ||
+                "price" in item ||
+                "cleaningType" in item
+              )
+            )
+          ) {
+            return {
+              key: key,
+              data: data
+            };
+          }
+        }
+
+        if (data && typeof data === "object") {
+          if (Array.isArray(data.jobs)) {
+            return {
+              key: key,
+              data: data.jobs,
+              parent: data,
+              property: "jobs"
+            };
+          }
+        }
+      } catch (e) {
+        console.log("Could not read storage key:", key);
+      }
+    }
+
+    return null;
+  }
+
+  function saveJobs(storageInfo, jobs) {
+    try {
+      if (storageInfo.parent) {
+        storageInfo.parent[storageInfo.property] = jobs;
+        localStorage.setItem(
+          storageInfo.key,
+          JSON.stringify(storageInfo.parent)
+        );
+      } else {
+        localStorage.setItem(
+          storageInfo.key,
+          JSON.stringify(jobs)
+        );
+      }
+
+      return true;
+    } catch (e) {
+      alert("Could not save the edited job.");
+      console.error(e);
+      return false;
+    }
+  }
+
+  function getValue(job, names, fallback = "") {
+    for (const name of names) {
+      if (
+        job &&
+        Object.prototype.hasOwnProperty.call(job, name) &&
+        job[name] !== undefined &&
+        job[name] !== null
+      ) {
+        return job[name];
+      }
+    }
+
+    return fallback;
+  }
+
+  function setExistingValue(job, names, value) {
+    for (const name of names) {
+      if (Object.prototype.hasOwnProperty.call(job, name)) {
+        job[name] = value;
+        return;
+      }
+    }
+
+    job[names[0]] = value;
+  }
+
+  function editJob(index) {
+    const storageInfo = findJobsStorage();
+
+    if (!storageInfo) {
+      alert(
+        "I couldn't find the saved jobs data. " +
+        "Please refresh the app and try again."
+      );
+      return;
+    }
+
+    const jobs = storageInfo.data;
+
+    if (!jobs[index]) {
+      alert("Job not found.");
+      return;
+    }
+
+    const job = jobs[index];
+
+    const currentClient = getValue(
+      job,
+      ["client", "clientName", "customer", "customerName"],
+      ""
+    );
+
+    const currentDate = getValue(
+      job,
+      ["date", "jobDate"],
+      ""
+    );
+
+    const currentTime = getValue(
+      job,
+      ["time", "jobTime"],
+      ""
+    );
+
+    const currentType = getValue(
+      job,
+      ["cleaningType", "type", "service"],
+      "Regular cleaning"
+    );
+
+    const currentPrice = getValue(
+      job,
+      ["price", "amount", "total"],
+      ""
+    );
+
+    const currentNotes = getValue(
+      job,
+      ["notes", "jobNotes", "accessInstructions"],
+      ""
+    );
+
+    const client = prompt(
+      "Client name:",
+      currentClient
+    );
+
+    if (client === null) return;
+
+    const date = prompt(
+      "Job date:",
+      currentDate
+    );
+
+    if (date === null) return;
+
+    const time = prompt(
+      "Job time:",
+      currentTime
+    );
+
+    if (time === null) return;
+
+    const cleaningType = prompt(
+      "Cleaning type:",
+      currentType
+    );
+
+    if (cleaningType === null) return;
+
+    const price = prompt(
+      "Price:",
+      currentPrice
+    );
+
+    if (price === null) return;
+
+    const notes = prompt(
+      "Job notes / access instructions:",
+      currentNotes
+    );
+
+    if (notes === null) return;
+
+    setExistingValue(
+      job,
+      ["client", "clientName", "customer", "customerName"],
+      client
+    );
+
+    setExistingValue(
+      job,
+      ["date", "jobDate"],
+      date
+    );
+
+    setExistingValue(
+      job,
+      ["time", "jobTime"],
+      time
+    );
+
+    setExistingValue(
+      job,
+      ["cleaningType", "type", "service"],
+      cleaningType
+    );
+
+    setExistingValue(
+      job,
+      ["price", "amount", "total"],
+      price
+    );
+
+    setExistingValue(
+      job,
+      ["notes", "jobNotes", "accessInstructions"],
+      notes
+    );
+
+    if (saveJobs(storageInfo, jobs)) {
+      alert("Job updated successfully.");
+
+      /*
+       * Reloading guarantees that the existing dashboard,
+       * jobs list and calculations all use the new information.
+       */
+      location.reload();
+    }
+  }
+
+  function addEditButtons() {
+    const storageInfo = findJobsStorage();
+
+    if (!storageInfo) return;
+
+    const jobs = storageInfo.data;
+
+    /*
+     * Find Delete buttons. The existing app displays one
+     * Delete button for each job.
+     */
+    const deleteButtons = Array.from(
+      document.querySelectorAll("button")
+    ).filter(button =>
+      button.textContent.trim().toLowerCase() === "delete"
+    );
+
+    if (!deleteButtons.length) return;
+
+    deleteButtons.forEach((deleteButton, index) => {
+
+      /*
+       * Don't add the button twice.
+       */
+      if (
+        deleteButton.parentElement &&
+        deleteButton.parentElement.querySelector(
+          ".drs-edit-job-button"
+        )
+      ) {
+        return;
+      }
+
+      if (!jobs[index]) return;
+
+      const editButton = document.createElement("button");
+
+      editButton.type = "button";
+      editButton.textContent = "Edit";
+      editButton.className = "drs-edit-job-button";
+
+      editButton.style.marginRight = "8px";
+      editButton.style.background = "#1373e6";
+      editButton.style.color = "#fff";
+      editButton.style.border = "0";
+      editButton.style.borderRadius = "10px";
+      editButton.style.padding = "10px 18px";
+      editButton.style.fontWeight = "700";
+      editButton.style.cursor = "pointer";
+
+      editButton.addEventListener("click", function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        editJob(index);
+      });
+
+      /*
+       * Put Edit beside Delete.
+       */
+      deleteButton.parentElement.insertBefore(
+        editButton,
+        deleteButton
+      );
+    });
+  }
+
+  /*
+   * Run after the page loads.
+   */
+  window.addEventListener("load", function () {
+    setTimeout(addEditButtons, 300);
+    setTimeout(addEditButtons, 1000);
+  });
+
+  /*
+   * Also check whenever the page changes.
+   */
+  const observer = new MutationObserver(function () {
+    addEditButtons();
+  });
+
+  window.addEventListener("DOMContentLoaded", function () {
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true
+    });
+  });
+
+})();
+            </script>
 </body>
     </html>
     $("clientForm").addEventListener("submit",function(event){
