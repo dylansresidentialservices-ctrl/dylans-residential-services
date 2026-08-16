@@ -10,242 +10,543 @@
 <title>Dylan's Residential Services - Business Manager</title>
 
 <style>
-* {
-    box-sizing: border-box;
+*{
+    box-sizing:border-box;
 }
 
-:root {
-    --blue: #1373e6;
-    --blue-dark: #0d5fc5;
-    --green: #16a34a;
-    --red: #dc2626;
-    --orange: #ea580c;
-    --purple: #7c3aed;
-    --bg: #0f1115;
-    --panel: #181b21;
-    --panel2: #20242c;
-    --border: #343944;
-    --text: #f4f6f8;
-    --muted: #aab1bd;
-    --input: #11141a;
-    --shadow: 0 8px 30px rgba(0,0,0,.25);
+:root{
+    --blue:#1373e6;
+    --blue2:#0d5fc5;
+    --green:#16a34a;
+    --red:#dc2626;
+    --orange:#ea580c;
+    --purple:#7c3aed;
+    --bg:#0f1115;
+    --panel:#181b21;
+    --panel2:#20242c;
+    --border:#343944;
+    --text:#f4f6f8;
+    --muted:#aab1bd;
+    --input:#11141a;
 }
 
-html {
-    scroll-behavior: smooth;
-}
-
-body {
-    margin: 0;
-    font-family: Arial, Helvetica, sans-serif;
-    background: var(--bg);
-    color: var(--text);
+body{
+    margin:0;
+    font-family:Arial,Helvetica,sans-serif;
+    background:var(--bg);
+    color:var(--text);
 }
 
 button,
 input,
 select,
-textarea {
-    font: inherit;
+textarea{
+    font:inherit;
 }
 
-button {
-    cursor: pointer;
+button{
+    cursor:pointer;
 }
 
-.app {
-    min-height: 100vh;
+header{
+    position:sticky;
+    top:0;
+    z-index:1000;
+    background:#15181e;
+    border-bottom:1px solid var(--border);
+    box-shadow:0 4px 15px rgba(0,0,0,.3);
 }
 
-/* HEADER */
-
-header {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    background: #15181e;
-    border-bottom: 1px solid var(--border);
-    box-shadow: var(--shadow);
+.header-inner{
+    max-width:1250px;
+    margin:auto;
+    padding:14px 18px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:15px;
 }
 
-.header-inner {
-    max-width: 1250px;
-    margin: auto;
-    padding: 14px 18px;
+.brand h1{
+    margin:0;
+    font-size:22px;
 }
 
-.top-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 15px;
+.brand p{
+    margin:4px 0 0;
+    color:var(--muted);
+    font-size:12px;
 }
 
-.brand h1 {
-    margin: 0;
-    font-size: 21px;
+nav{
+    display:flex;
+    gap:7px;
+    flex-wrap:wrap;
 }
 
-.brand p {
-    margin: 4px 0 0;
-    color: var(--muted);
-    font-size: 12px;
-}
-
-.menu-btn {
-    display: none;
-    background: var(--panel2);
-    color: white;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 9px 12px;
-    font-size: 20px;
-}
-
-nav {
-    display: flex;
-    gap: 7px;
-    flex-wrap: wrap;
-    margin-top: 14px;
-}
-
-.nav-btn {
-    border: 1px solid var(--border);
-    background: var(--panel2);
-    color: #dce2ea;
-    padding: 10px 13px;
-    border-radius: 8px;
-    transition: .15s;
+.nav-btn{
+    border:1px solid var(--border);
+    background:var(--panel2);
+    color:#dce2ea;
+    padding:10px 13px;
+    border-radius:8px;
 }
 
 .nav-btn:hover,
-.nav-btn.active {
-    background: var(--blue);
-    border-color: var(--blue);
-    color: white;
+.nav-btn.active{
+    background:var(--blue);
+    border-color:var(--blue);
+    color:white;
 }
 
-/* MAIN */
-
-main {
-    max-width: 1250px;
-    margin: auto;
-    padding: 25px 18px 70px;
+.menu-btn{
+    display:none;
+    background:var(--panel2);
+    color:white;
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:9px 12px;
+    font-size:20px;
 }
 
-.page {
-    display: none;
+main{
+    max-width:1250px;
+    margin:auto;
+    padding:25px 18px 70px;
 }
 
-.page.active {
-    display: block;
+.page{
+    display:none;
 }
 
-.page-title {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 15px;
-    margin-bottom: 20px;
+.page.active{
+    display:block;
 }
 
-.page-title h2 {
-    margin: 0;
-    font-size: 25px;
+.page-title{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:15px;
+    margin-bottom:20px;
+    flex-wrap:wrap;
 }
 
-.page-title p {
-    margin: 5px 0 0;
-    color: var(--muted);
+.page-title h2{
+    margin:0;
+    font-size:25px;
 }
 
-.actions {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
+.page-title p{
+    margin:5px 0 0;
+    color:var(--muted);
 }
 
-/* BUTTONS */
-
-.btn {
-    border: 0;
-    border-radius: 8px;
-    padding: 11px 16px;
-    color: white;
-    font-weight: 600;
-    cursor: pointer;
+.btn{
+    border:0;
+    border-radius:8px;
+    padding:11px 15px;
+    color:white;
+    font-weight:bold;
 }
 
-.btn-primary {
-    background: var(--blue);
+.btn-blue{background:var(--blue);}
+.btn-blue:hover{background:var(--blue2);}
+.btn-green{background:var(--green);}
+.btn-red{background:var(--red);}
+.btn-orange{background:var(--orange);}
+.btn-purple{background:var(--purple);}
+.btn-gray{background:#3b414d;}
+
+.grid{
+    display:grid;
+    gap:15px;
 }
 
-.btn-primary:hover {
-    background: var(--blue-dark);
+.grid-2{
+    grid-template-columns:repeat(2,minmax(0,1fr));
 }
 
-.btn-green {
-    background: var(--green);
+.grid-3{
+    grid-template-columns:repeat(3,minmax(0,1fr));
 }
 
-.btn-red {
-    background: var(--red);
+.grid-4{
+    grid-template-columns:repeat(4,minmax(0,1fr));
 }
 
-.btn-orange {
-    background: var(--orange);
+.card{
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:18px;
+    box-shadow:0 5px 20px rgba(0,0,0,.2);
 }
 
-.btn-purple {
-    background: var(--purple);
+.stat{
+    min-height:110px;
 }
 
-.btn-secondary {
-    background: var(--panel2);
-    border: 1px solid var(--border);
-    color: white;
+.stat-label{
+    color:var(--muted);
+    font-size:13px;
 }
 
-.btn-small {
-    padding: 7px 10px;
-    font-size: 13px;
+.stat-value{
+    font-size:27px;
+    font-weight:bold;
+    margin-top:10px;
 }
 
-/* DASHBOARD */
-
-.stats {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 14px;
-    margin-bottom: 20px;
+.section{
+    margin-top:20px;
 }
 
-.stat {
-    background: var(--panel);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 18px;
-    box-shadow: var(--shadow);
+.section h3{
+    margin:0 0 14px;
 }
 
-.stat-label {
-    color: var(--muted);
-    font-size: 13px;
-    margin-bottom: 8px;
+.form-grid{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:14px;
 }
 
-.stat-value {
-    font-size: 26px;
-    font-weight: bold;
+.field{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
 }
 
-.stat.blue .stat-value {
-    color: #60a5fa;
+.field.full{
+    grid-column:1/-1;
 }
 
-.stat.green .stat-value {
-    color: #4ade80;
+label{
+    color:#dce2ea;
+    font-size:13px;
 }
 
-.stat.orange .stat-value {
-   
+input,
+select,
+textarea{
+    width:100%;
+    background:var(--input);
+    color:white;
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:11px;
+    outline:none;
+}
+
+input:focus,
+select:focus,
+textarea:focus{
+    border-color:var(--blue);
+}
+
+textarea{
+    min-height:100px;
+    resize:vertical;
+}
+
+.actions{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    margin-top:15px;
+}
+
+.table-wrap{
+    overflow-x:auto;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    min-width:700px;
+}
+
+th,
+td{
+    padding:12px 10px;
+    border-bottom:1px solid var(--border);
+    text-align:left;
+}
+
+th{
+    color:#cbd5e1;
+    font-size:13px;
+}
+
+td{
+    color:#eef2f7;
+}
+
+.empty{
+    text-align:center;
+    color:var(--muted);
+    padding:35px 10px;
+}
+
+.badge{
+    display:inline-block;
+    padding:5px 9px;
+    border-radius:999px;
+    font-size:12px;
+    font-weight:bold;
+}
+
+.badge-green{
+    background:rgba(22,163,74,.18);
+    color:#4ade80;
+}
+
+.badge-orange{
+    background:rgba(234,88,12,.18);
+    color:#fb923c;
+}
+
+.badge-red{
+    background:rgba(220,38,38,.18);
+    color:#f87171;
+}
+
+.badge-blue{
+    background:rgba(19,115,230,.18);
+    color:#60a5fa;
+}
+
+.progress{
+    height:12px;
+    background:#30343d;
+    border-radius:20px;
+    overflow:hidden;
+}
+
+.progress-bar{
+    height:100%;
+    background:var(--blue);
+    width:0%;
+    transition:.3s;
+}
+
+.notice{
+    padding:13px;
+    border-radius:8px;
+    background:rgba(19,115,230,.12);
+    border:1px solid rgba(19,115,230,.3);
+    color:#cfe3ff;
+}
+
+.modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.7);
+    z-index:2000;
+    padding:20px;
+    overflow:auto;
+}
+
+.modal.show{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.modal-box{
+    width:min(700px,100%);
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:20px;
+}
+
+.modal-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:15px;
+}
+
+.modal-head h3{
+    margin:0;
+}
+
+.close{
+    background:transparent;
+    border:0;
+    color:white;
+    font-size:25px;
+}
+
+.small{
+    font-size:12px;
+    color:var(--muted);
+}
+
+.dashboard-actions{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+}
+
+.footer{
+    text-align:center;
+    color:var(--muted);
+    font-size:12px;
+    margin-top:40px;
+}
+
+@media(max-width:900px){
+    .grid-4{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+    }
+
+    .header-inner{
+        align-items:flex-start;
+    }
+
+    nav{
+        display:none;
+        width:100%;
+    }
+
+    nav.open{
+        display:flex;
+    }
+
+    .menu-btn{
+        display:block;
+    }
+
+    .header-inner{
+        flex-wrap:wrap;
+    }
+
+    .brand{
+        flex:1;
+    }
+}
+
+@media(max-width:650px){
+    .grid-2,
+    .grid-3,
+    .grid-4,
+    .form-grid{
+        grid-template-columns:1fr;
+    }
+
+    main{
+        padding:18px 12px 60px;
+    }
+
+    .page-title h2{
+        font-size:21px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="header-inner">
+
+        <div class="brand">
+            <h1 id="brandName">Dylan's Residential Services</h1>
+            <p>Business Manager</p>
+        </div>
+
+        <button class="menu-btn" id="menuBtn">☰</button>
+
+        <nav id="mainNav">
+            <button class="nav-btn active" data-page="dashboard">Dashboard</button>
+            <button class="nav-btn" data-page="jobs">Jobs</button>
+            <button class="nav-btn" data-page="clients">Clients</button>
+            <button class="nav-btn" data-page="estimates">Estimates</button>
+            <button class="nav-btn" data-page="invoices">Invoices</button>
+            <button class="nav-btn" data-page="expenses">Expenses</button>
+            <button class="nav-btn" data-page="reports">Reports</button>
+            <button class="nav-btn" data-page="settings">Settings</button>
+        </nav>
+
+    </div>
+</header>
+
+<main>
+
+<!-- DASHBOARD -->
+<section class="page active" id="dashboard">
+
+    <div class="page-title">
+        <div>
+            <h2>Business Dashboard</h2>
+            <p>Everything automatically saves on this device.</p>
+        </div>
+    </div>
+
+    <div class="grid grid-4">
+
+        <div class="card stat">
+            <div class="stat-label">Paid revenue</div>
+            <div class="stat-value" id="dashRevenue">$0.00</div>
+        </div>
+
+        <div class="card stat">
+            <div class="stat-label">Unpaid invoices</div>
+            <div class="stat-value" id="dashUnpaid">$0.00</div>
+        </div>
+
+        <div class="card stat">
+            <div class="stat-label">Expenses</div>
+            <div class="stat-value" id="dashExpenses">$0.00</div>
+        </div>
+
+        <div class="card stat">
+            <div class="stat-label">Profit</div>
+            <div class="stat-value" id="dashProfit">$0.00</div>
+        </div>
+
+        <div class="card stat">
+            <div class="stat-label">Cleaning jobs</div>
+            <div class="stat-value" id="dashJobs">0</div>
+        </div>
+
+        <div class="card stat">
+            <div class="stat-label">Completed jobs</div>
+            <div class="stat-value" id="dashCompleted">0</div>
+        </div>
+
+        <div class="card stat">
+            <div class="stat-label">Clients</div>
+            <div class="stat-value" id="dashClients">0</div>
+        </div>
+
+        <div class="card stat">
+            <div class="stat-label">Outstanding invoices</div>
+            <div class="stat-value" id="dashOutstanding">0</div>
+        </div>
+
+    </div>
+
+    <div class="section card">
+        <h3>Quick actions</h3>
+
+        <div class="dashboard-actions">
+            <button class="btn btn-blue" onclick="openJobModal()">+ New cleaning job</button>
+            <button class="btn btn-blue" onclick="openClientModal()">+ New client</button>
+            <button class="btn btn-blue" onclick="openEstimateModal()">+ New estimate</button>
+            <button class="btn btn-blue" onclick="openInvoiceModal()">+ New invoice</button>
+            <button class="btn btn-blue" onclick="openExpenseModal()">+ Add expense</button>
+        </div>
+    </div>
+
+    <div class="section card">
+        <h3>Automatic progress & updates</h3>
+
+        <div id="progressText"></div>
+
+        <div class="progress" style="margin-top:12px;">
+            <div class="progress-bar" id
