@@ -2,139 +2,250 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#1373e6">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
 <title>Dylan's Residential Services - Business Manager</title>
 
 <style>
-*{box-sizing:border-box}
-
-:root{
-  --blue:#1373e6;
-  --blue2:#0d5fc5;
-  --green:#16a34a;
-  --red:#dc2626;
-  --orange:#ea580c;
-  --purple:#7c3aed;
-  --bg:#0f1115;
-  --panel:#181b21;
-  --panel2:#20242c;
-  --border:#343944;
-  --text:#f4f6f8;
-  --muted:#aab1bd;
-  --input:#11141a;
-  --shadow:0 8px 30px rgba(0,0,0,.25);
+* {
+    box-sizing: border-box;
 }
 
-body{
-  margin:0;
-  font-family:Arial,Helvetica,sans-serif;
-  background:var(--bg);
-  color:var(--text);
+:root {
+    --blue: #1373e6;
+    --blue-dark: #0d5fc5;
+    --green: #16a34a;
+    --red: #dc2626;
+    --orange: #ea580c;
+    --purple: #7c3aed;
+    --bg: #0f1115;
+    --panel: #181b21;
+    --panel2: #20242c;
+    --border: #343944;
+    --text: #f4f6f8;
+    --muted: #aab1bd;
+    --input: #11141a;
+    --shadow: 0 8px 30px rgba(0,0,0,.25);
 }
 
-button,input,select,textarea{
-  font:inherit;
+html {
+    scroll-behavior: smooth;
 }
 
-button{
-  cursor:pointer;
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: var(--bg);
+    color: var(--text);
 }
 
-.app{
-  min-height:100vh;
+button,
+input,
+select,
+textarea {
+    font: inherit;
 }
 
-header{
-  position:sticky;
-  top:0;
-  z-index:100;
-  background:#15181e;
-  border-bottom:1px solid var(--border);
-  padding:14px 18px;
-  box-shadow:var(--shadow);
+button {
+    cursor: pointer;
 }
 
-.header-inner{
-  max-width:1250px;
-  margin:auto;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:15px;
+.app {
+    min-height: 100vh;
 }
 
-.brand h1{
-  margin:0;
-  font-size:22px;
+/* HEADER */
+
+header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: #15181e;
+    border-bottom: 1px solid var(--border);
+    box-shadow: var(--shadow);
 }
 
-.brand p{
-  margin:4px 0 0;
-  color:var(--muted);
-  font-size:12px;
+.header-inner {
+    max-width: 1250px;
+    margin: auto;
+    padding: 14px 18px;
 }
 
-.menu-btn{
-  display:none;
-  background:var(--panel2);
-  color:white;
-  border:1px solid var(--border);
-  border-radius:8px;
-  padding:9px 12px;
-  font-size:20px;
+.top-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
 }
 
-nav{
-  display:flex;
-  gap:7px;
-  flex-wrap:wrap;
+.brand h1 {
+    margin: 0;
+    font-size: 21px;
 }
 
-.nav-btn{
-  border:1px solid var(--border);
-  background:var(--panel2);
-  color:#dce2ea;
-  padding:10px 13px;
-  border-radius:8px;
+.brand p {
+    margin: 4px 0 0;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.menu-btn {
+    display: none;
+    background: var(--panel2);
+    color: white;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 9px 12px;
+    font-size: 20px;
+}
+
+nav {
+    display: flex;
+    gap: 7px;
+    flex-wrap: wrap;
+    margin-top: 14px;
+}
+
+.nav-btn {
+    border: 1px solid var(--border);
+    background: var(--panel2);
+    color: #dce2ea;
+    padding: 10px 13px;
+    border-radius: 8px;
+    transition: .15s;
 }
 
 .nav-btn:hover,
-.nav-btn.active{
-  background:var(--blue);
-  border-color:var(--blue);
-  color:white;
+.nav-btn.active {
+    background: var(--blue);
+    border-color: var(--blue);
+    color: white;
 }
 
-main{
-  max-width:1250px;
-  margin:auto;
-  padding:25px 18px 60px;
+/* MAIN */
+
+main {
+    max-width: 1250px;
+    margin: auto;
+    padding: 25px 18px 70px;
 }
 
-.page{
-  display:none;
+.page {
+    display: none;
 }
 
-.page.active{
-  display:block;
+.page.active {
+    display: block;
 }
 
-.page-title{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:15px;
-  margin-bottom:20px;
+.page-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    margin-bottom: 20px;
 }
 
-.page-title h2{
-  margin:0;
-  font-size:25px;
+.page-title h2 {
+    margin: 0;
+    font-size: 25px;
 }
 
-.page-title p{
-  color:var(--
- 
+.page-title p {
+    margin: 5px 0 0;
+    color: var(--muted);
+}
+
+.actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+/* BUTTONS */
+
+.btn {
+    border: 0;
+    border-radius: 8px;
+    padding: 11px 16px;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-primary {
+    background: var(--blue);
+}
+
+.btn-primary:hover {
+    background: var(--blue-dark);
+}
+
+.btn-green {
+    background: var(--green);
+}
+
+.btn-red {
+    background: var(--red);
+}
+
+.btn-orange {
+    background: var(--orange);
+}
+
+.btn-purple {
+    background: var(--purple);
+}
+
+.btn-secondary {
+    background: var(--panel2);
+    border: 1px solid var(--border);
+    color: white;
+}
+
+.btn-small {
+    padding: 7px 10px;
+    font-size: 13px;
+}
+
+/* DASHBOARD */
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 20px;
+}
+
+.stat {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px;
+    box-shadow: var(--shadow);
+}
+
+.stat-label {
+    color: var(--muted);
+    font-size: 13px;
+    margin-bottom: 8px;
+}
+
+.stat-value {
+    font-size: 26px;
+    font-weight: bold;
+}
+
+.stat.blue .stat-value {
+    color: #60a5fa;
+}
+
+.stat.green .stat-value {
+    color: #4ade80;
+}
+
+.stat.orange .stat-value {
+   
