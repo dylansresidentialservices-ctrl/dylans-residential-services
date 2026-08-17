@@ -123,10 +123,6 @@ textarea{
     resize:vertical;
 }
 
-button{
-    font-size:15px;
-}
-
 .primary{
     background:#0077cc;
     color:white;
@@ -165,6 +161,19 @@ button{
     padding:10px 14px;
     font-weight:bold;
     cursor:pointer;
+}
+
+.info{
+    background:#008080;
+    color:white;
+    border:0;
+    border-radius:8px;
+    padding:10px 14px;
+    font-weight:bold;
+    cursor:pointer;
+    text-decoration:none;
+    display:inline-block;
+    text-align:center;
 }
 
 .actions{
@@ -285,20 +294,6 @@ th{
         font-size:25px;
     }
 }
-
-@media(max-width:500px){
-    .stats{
-        grid-template-columns:1fr 1fr;
-    }
-
-    .stat strong{
-        font-size:22px;
-    }
-
-    header h1{
-        font-size:22px;
-    }
-}
 </style>
 </head>
 
@@ -323,29 +318,13 @@ th{
 
 <!-- DASHBOARD -->
 <section id="dashboard" class="page active">
-
 <h2>Business Dashboard</h2>
 
 <div class="stats">
-    <div class="stat">
-        <small>Paid earnings</small>
-        <strong id="paidTotal">$0.00</strong>
-    </div>
-
-    <div class="stat">
-        <small>Unpaid invoices</small>
-        <strong id="unpaidTotal">$0.00</strong>
-    </div>
-
-    <div class="stat">
-        <small>Expenses</small>
-        <strong id="expenseTotal">$0.00</strong>
-    </div>
-
-    <div class="stat">
-        <small>Profit</small>
-        <strong id="profitTotal">$0.00</strong>
-    </div>
+    <div class="stat"><small>Paid earnings</small><strong id="paidTotal">$0.00</strong></div>
+    <div class="stat"><small>Unpaid invoices</small><strong id="unpaidTotal">$0.00</strong></div>
+    <div class="stat"><small>Expenses</small><strong id="expenseTotal">$0.00</strong></div>
+    <div class="stat"><small>Profit</small><strong id="profitTotal">$0.00</strong></div>
 </div>
 
 <div class="card">
@@ -355,7 +334,6 @@ th{
 
 <div class="card">
     <h3>Quick actions</h3>
-
     <div class="quick">
         <button class="primary" type="button" onclick="showPage('services')">+ Manage services</button>
         <button class="primary" type="button" onclick="showPage('jobs')">+ New cleaning job</button>
@@ -364,237 +342,100 @@ th{
         <button class="primary" type="button" onclick="showPage('expenses')">+ Add expense</button>
     </div>
 </div>
-
 </section>
-
 
 <!-- SERVICES -->
 <section id="services" class="page">
-
 <h2>Services & Pricing</h2>
-
 <div class="card">
 <div class="form-grid two">
-
-<div class="field">
-<label>Service name</label>
-<input id="serviceName" placeholder="e.g. 2 Bedroom 1 Bathroom Bond Cleaning">
+<div class="field"><label>Service name</label><input id="serviceName" placeholder="e.g. Bond Clean"></div>
+<div class="field"><label>Price ($)</label><input id="servicePrice" type="number" step="0.01" min="0" placeholder="0.00"></div>
+<div class="field full"><label>Description / inclusions</label><textarea id="serviceDesc" placeholder="Describe inclusions..."></textarea></div>
 </div>
-
-<div class="field">
-<label>Price ($)</label>
-<input id="servicePrice" type="number" step="0.01" min="0" placeholder="0.00">
-</div>
-
-<div class="field full">
-<label>Description / inclusions</label>
-<textarea id="serviceDesc" placeholder="Describe what is included in this service..."></textarea>
-</div>
-
-</div>
-
 <div class="actions">
 <button id="serviceSaveBtn" class="primary" type="button" onclick="saveService()">Add service</button>
 <button id="serviceCancelBtn" class="secondary" type="button" onclick="cancelServiceEdit()" style="display:none">Cancel</button>
 </div>
 </div>
-
 <div id="serviceList"></div>
-
 </section>
-
 
 <!-- CLIENTS -->
 <section id="clients" class="page">
-
 <h2>Clients & Properties</h2>
-
 <div class="card">
 <div class="form-grid">
-
-<div class="field">
-<label>Client name</label>
-<input id="clientName" placeholder="Client name">
+<div class="field"><label>Client name</label><input id="clientName" placeholder="Client name"></div>
+<div class="field"><label>Phone</label><input id="clientPhone" placeholder="Phone"></div>
+<div class="field"><label>Email</label><input id="clientEmail" type="email" placeholder="Email"></div>
+<div class="field full"><label>Property address</label><input id="clientAddress" placeholder="Property address"></div>
+<div class="field full"><label>Property notes</label><textarea id="clientNotes" placeholder="Bedrooms, bathrooms, pets..."></textarea></div>
 </div>
-
-<div class="field">
-<label>Phone</label>
-<input id="clientPhone" placeholder="Phone">
-</div>
-
-<div class="field">
-<label>Email</label>
-<input id="clientEmail" type="email" placeholder="Email">
-</div>
-
-<div class="field full">
-<label>Property address</label>
-<input id="clientAddress" placeholder="Property address">
-</div>
-
-<div class="field full">
-<label>Property notes</label>
-<textarea id="clientNotes" placeholder="Bedrooms, bathrooms, pets, special requirements..."></textarea>
-</div>
-
-</div>
-
 <div class="actions">
 <button id="clientSaveBtn" class="primary" type="button" onclick="saveClient()">Add client</button>
 <button id="clientCancelBtn" class="secondary" type="button" onclick="cancelClientEdit()" style="display:none">Cancel</button>
 </div>
 </div>
-
 <div class="card">
 <div class="table-wrap">
 <table>
-<thead>
-<tr>
-<th>Client</th>
-<th>Phone</th>
-<th>Email</th>
-<th>Address</th>
-<th>Actions</th>
-</tr>
-</thead>
+<thead><tr><th>Client</th><th>Phone</th><th>Email</th><th>Address</th><th>Actions</th></tr></thead>
 <tbody id="clientTable"></tbody>
 </table>
 </div>
 </div>
-
 </section>
-
 
 <!-- JOBS -->
 <section id="jobs" class="page">
-
 <h2>Cleaning Jobs</h2>
-
 <div class="card">
 <div class="form-grid">
-
-<div class="field">
-<label>Client</label>
-<select id="jobClient"></select>
+<div class="field"><label>Client</label><select id="jobClient"></select></div>
+<div class="field"><label>Date</label><input id="jobDate" type="date"></div>
+<div class="field"><label>Time</label><input id="jobTime" type="time"></div>
+<div class="field"><label>Cleaning type</label><select id="jobType"></select></div>
+<div class="field"><label>Price</label><input id="jobPrice" type="number" step="0.01" min="0" placeholder="0.00"></div>
+<div class="field full"><label>Job notes / access instructions</label><textarea id="jobNotes" placeholder="Keys, pets..."></textarea></div>
 </div>
-
-<div class="field">
-<label>Date</label>
-<input id="jobDate" type="date">
-</div>
-
-<div class="field">
-<label>Time</label>
-<input id="jobTime" type="time">
-</div>
-
-<div class="field">
-<label>Cleaning type</label>
-<select id="jobType"></select>
-</div>
-
-<div class="field">
-<label>Price</label>
-<input id="jobPrice" type="number" step="0.01" min="0" placeholder="0.00">
-</div>
-
-<div class="field full">
-<label>Job notes / access instructions</label>
-<textarea id="jobNotes" placeholder="Keys, pets, special requests..."></textarea>
-</div>
-
-</div>
-
 <div class="actions">
 <button id="jobSaveBtn" class="primary" type="button" onclick="saveJob()">Add job</button>
 <button id="jobCancelBtn" class="secondary" type="button" onclick="cancelJobEdit()" style="display:none">Cancel</button>
 </div>
 </div>
-
 <div id="jobList"></div>
-
 </section>
-
 
 <!-- ESTIMATES -->
 <section id="estimates" class="page">
-
 <h2>Estimates</h2>
-
 <div class="card">
 <div class="form-grid">
-
-<div class="field">
-<label>Client</label>
-<select id="estimateClient"></select>
+<div class="field"><label>Client</label><select id="estimateClient"></select></div>
+<div class="field"><label>Date</label><input id="estimateDate" type="date"></div>
+<div class="field"><label>Valid until</label><input id="estimateValid" type="date"></div>
+<div class="field"><label>Amount</label><input id="estimateAmount" type="number" step="0.01" min="0"></div>
+<div class="field full"><label>Description / notes</label><textarea id="estimateNotes" placeholder="Inclusions..."></textarea></div>
 </div>
-
-<div class="field">
-<label>Date</label>
-<input id="estimateDate" type="date">
-</div>
-
-<div class="field">
-<label>Valid until</label>
-<input id="estimateValid" type="date">
-</div>
-
-<div class="field">
-<label>Amount</label>
-<input id="estimateAmount" type="number" step="0.01" min="0">
-</div>
-
-<div class="field full">
-<label>Description / notes</label>
-<textarea id="estimateNotes" placeholder="Cleaning services, inclusions..."></textarea>
-</div>
-
-</div>
-
 <div class="actions">
 <button id="estimateSaveBtn" class="primary" type="button" onclick="saveEstimate()">Add estimate</button>
 <button id="estimateCancelBtn" class="secondary" type="button" onclick="cancelEstimateEdit()" style="display:none">Cancel</button>
 </div>
 </div>
-
 <div id="estimateList"></div>
-
 </section>
-
 
 <!-- INVOICES -->
 <section id="invoices" class="page">
-
 <h2>Invoices</h2>
-
 <div class="card">
 <div class="form-grid">
-
-<div class="field">
-<label>Client</label>
-<select id="invoiceClient"></select>
-</div>
-
-<div class="field">
-<label>Invoice number</label>
-<input id="invoiceNumber" placeholder="INV-001">
-</div>
-
-<div class="field">
-<label>Date</label>
-<input id="invoiceDate" type="date">
-</div>
-
-<div class="field">
-<label>Due date</label>
-<input id="invoiceDue" type="date">
-</div>
-
-<div class="field">
-<label>Amount</label>
-<input id="invoiceAmount" type="number" step="0.01" min="0">
-</div>
-
+<div class="field"><label>Client</label><select id="invoiceClient"></select></div>
+<div class="field"><label>Invoice number</label><input id="invoiceNumber" placeholder="INV-001"></div>
+<div class="field"><label>Date</label><input id="invoiceDate" type="date"></div>
+<div class="field"><label>Due date</label><input id="invoiceDue" type="date"></div>
+<div class="field"><label>Amount</label><input id="invoiceAmount" type="number" step="0.01" min="0"></div>
 <div class="field">
 <label>Status</label>
 <select id="invoiceStatus">
@@ -602,88 +443,45 @@ th{
 <option value="paid">Paid</option>
 </select>
 </div>
-
-<div class="field full">
-<label>Description / notes</label>
-<textarea id="invoiceNotes"></textarea>
+<div class="field full"><label>Description / notes</label><textarea id="invoiceNotes"></textarea></div>
 </div>
-
-</div>
-
 <div class="actions">
 <button id="invoiceSaveBtn" class="primary" type="button" onclick="saveInvoice()">Add invoice</button>
 <button id="invoiceCancelBtn" class="secondary" type="button" onclick="cancelInvoiceEdit()" style="display:none">Cancel</button>
 </div>
 </div>
-
 <div id="invoiceList"></div>
-
 </section>
-
 
 <!-- EXPENSES -->
 <section id="expenses" class="page">
-
 <h2>Expenses</h2>
-
 <div class="card">
 <div class="form-grid">
-
-<div class="field">
-<label>Date</label>
-<input id="expenseDate" type="date">
-</div>
-
+<div class="field"><label>Date</label><input id="expenseDate" type="date"></div>
 <div class="field">
 <label>Category</label>
 <select id="expenseCategory">
-<option>Cleaning supplies</option>
-<option>Fuel</option>
-<option>Equipment</option>
-<option>Insurance</option>
-<option>Advertising</option>
-<option>Vehicle</option>
-<option>Other</option>
+<option>Cleaning supplies</option><option>Fuel</option><option>Equipment</option><option>Insurance</option><option>Advertising</option><option>Vehicle</option><option>Other</option>
 </select>
 </div>
-
-<div class="field">
-<label>Amount</label>
-<input id="expenseAmount" type="number" step="0.01" min="0">
+<div class="field"><label>Amount</label><input id="expenseAmount" type="number" step="0.01" min="0"></div>
+<div class="field full"><label>Description</label><input id="expenseDescription" placeholder="What was the expense for?"></div>
 </div>
-
-<div class="field full">
-<label>Description</label>
-<input id="expenseDescription" placeholder="What was the expense for?">
-</div>
-
-</div>
-
 <div class="actions">
 <button id="expenseSaveBtn" class="primary" type="button" onclick="saveExpense()">Add expense</button>
 <button id="expenseCancelBtn" class="secondary" type="button" onclick="cancelExpenseEdit()" style="display:none">Cancel</button>
 </div>
 </div>
-
 <div id="expenseList"></div>
-
 </section>
 
 </main>
 
 <script>
 const defaultServices = [
-    { id: "s1", name: "1 Bedroom 1 Bathroom Bond Cleaning", price: 350, desc: "Intensive end-of-lease bond clean designed to meet strict property manager standards." },
-    { id: "s2", name: "1 Bedroom 2 Bathroom Bond Cleaning", price: 400, desc: "Intensive end-of-lease bond clean designed to meet strict property manager standards." },
-    { id: "s3", name: "2 Bedroom 1 Bathroom Bond Cleaning", price: 420, desc: "Intensive end-of-lease bond clean designed to meet strict property manager standards." },
-    { id: "s4", name: "2 Bedroom 2 Bathroom Bond Cleaning", price: 455, desc: "Intensive end-of-lease bond clean designed to meet strict property manager standards." },
-    { id: "s5", name: "3 Bedroom 1 Bathroom Bond Cleaning", price: 490, desc: "Intensive end-of-lease bond clean designed to meet strict property manager standards." },
-    { id: "s6", name: "3 Bedroom 2 Bathroom Bond Cleaning", price: 525, desc: "Intensive end-of-lease bond clean designed to meet strict property manager standards." },
-    { id: "s7", name: "4 Bedroom 1 Bathroom Bond Cleaning", price: 560, desc: "Intensive end-of-lease bond clean designed to meet strict property manager standards." },
-    { id: "s8", name: "4 Bedroom 2 Bathroom Bond Cleaning", price: 595, desc: "Intensive end-of-lease bond clean designed to meet strict property manager standards." },
-    { id: "s9", name: "4 Bedroom 3 Bathroom Bond Cleaning", price: 630, desc: "Intensive end-of-lease bond clean designed to meet strict property manager standards." },
-    { id: "s10", name: "5 Bedroom 2 Bathroom Bond Cleaning", price: 665, desc: "Intensive end-of-lease bond clean designed to meet strict property manager standards." },
-    { id: "s11", name: "5 Bedroom 3 Bathroom Bond Cleaning", price: 700, desc: "Intensive end-of-lease bond clean designed to meet strict property manager standards." }
+    { id: "s1", name: "1 Bedroom 1 Bathroom Bond Cleaning", price: 350, desc: "Intensive end-of-lease bond clean." },
+    { id: "s2", name: "2 Bedroom 2 Bathroom Bond Cleaning", price: 455, desc: "Intensive end-of-lease bond clean." }
 ];
 
 let services = JSON.parse(localStorage.getItem("drs_services") || JSON.stringify(defaultServices));
@@ -693,12 +491,7 @@ let estimates = JSON.parse(localStorage.getItem("drs_estimates") || "[]");
 let invoices = JSON.parse(localStorage.getItem("drs_invoices") || "[]");
 let expenses = JSON.parse(localStorage.getItem("drs_expenses") || "[]");
 
-let editServiceIndex = -1;
-let editClientIndex = -1;
-let editJobIndex = -1;
-let editEstimateIndex = -1;
-let editInvoiceIndex = -1;
-let editExpenseIndex = -1;
+let editServiceIndex = -1, editClientIndex = -1, editJobIndex = -1, editEstimateIndex = -1, editInvoiceIndex = -1, editExpenseIndex = -1;
 
 function saveData(){
     localStorage.setItem("drs_services", JSON.stringify(services));
@@ -710,39 +503,20 @@ function saveData(){
     updateDashboard();
 }
 
-function money(value){
-    return "$" + Number(value || 0).toFixed(2);
-}
-
-function esc(value){
-    return String(value ?? "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");
-}
-
-function today(){
-    return new Date().toISOString().split("T")[0];
-}
-
-function clientName(id){
-    const c = clients.find(x => x.id === id);
-    return c ? c.name : "Unknown client";
-}
-
-function newId(){
-    return Date.now().toString(36) + Math.random().toString(36).slice(2);
-}
+function money(value){ return "$" + Number(value || 0).toFixed(2); }
+function esc(value){ return String(value ?? "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;"); }
+function today(){ return new Date().toISOString().split("T")[0]; }
+function clientObj(id){ return clients.find(x => x.id === id); }
+function newId(){ return Date.now().toString(36) + Math.random().toString(36).slice(2); }
 
 document.querySelectorAll(".nav-btn").forEach(button => {
-    button.addEventListener("click", () => {
-        showPage(button.dataset.page);
-    });
+    button.addEventListener("click", () => showPage(button.dataset.page));
 });
 
 function showPage(page){
     document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
     document.getElementById(page).classList.add("active");
-    document.querySelectorAll(".nav-btn").forEach(b => {
-        b.classList.toggle("active", b.dataset.page === page);
-    });
+    document.querySelectorAll(".nav-btn").forEach(b => b.classList.toggle("active", b.dataset.page === page));
     refreshAll();
 }
 
@@ -751,20 +525,10 @@ function saveService(){
     const name = document.getElementById("serviceName").value.trim();
     const price = Number(document.getElementById("servicePrice").value || 0);
     if(!name){ alert("Service name required"); return; }
-    const service = {
-        id: editServiceIndex === -1 ? newId() : services[editServiceIndex].id,
-        name,
-        price,
-        desc: document.getElementById("serviceDesc").value.trim()
-    };
-    if(editServiceIndex === -1) services.push(service);
-    else services[editServiceIndex] = service;
-    cancelServiceEdit();
-    saveData();
-    renderServices();
-    updateJobTypeSelector();
+    const service = { id: editServiceIndex === -1 ? newId() : services[editServiceIndex].id, name, price, desc: document.getElementById("serviceDesc").value.trim() };
+    if(editServiceIndex === -1) services.push(service); else services[editServiceIndex] = service;
+    cancelServiceEdit(); saveData(); renderServices(); updateJobTypeSelector();
 }
-
 function editService(index){
     const s = services[index];
     document.getElementById("serviceName").value = s.name;
@@ -773,34 +537,17 @@ function editService(index){
     editServiceIndex = index;
     document.getElementById("serviceSaveBtn").textContent = "Update service";
     document.getElementById("serviceCancelBtn").style.display = "inline-block";
-    showPage("services");
-    window.scrollTo({top:0,behavior:"smooth"});
+    showPage("services"); window.scrollTo({top:0,behavior:"smooth"});
 }
-
-function deleteService(index){
-    if(!confirm("Delete this service?")) return;
-    services.splice(index, 1);
-    saveData();
-    renderServices();
-    updateJobTypeSelector();
-}
-
+function deleteService(index){ if(!confirm("Delete this service?")) return; services.splice(index,1); saveData(); renderServices(); updateJobTypeSelector(); }
 function cancelServiceEdit(){
-    editServiceIndex = -1;
-    document.getElementById("serviceName").value = "";
-    document.getElementById("servicePrice").value = "";
-    document.getElementById("serviceDesc").value = "";
-    document.getElementById("serviceSaveBtn").textContent = "Add service";
-    document.getElementById("serviceCancelBtn").style.display = "none";
+    editServiceIndex = -1; document.getElementById("serviceName").value = ""; document.getElementById("servicePrice").value = ""; document.getElementById("serviceDesc").value = "";
+    document.getElementById("serviceSaveBtn").textContent = "Add service"; document.getElementById("serviceCancelBtn").style.display = "none";
 }
-
 function renderServices(){
     const box = document.getElementById("serviceList");
-    if(services.length === 0){
-        box.innerHTML = `<div class="card empty">No services added yet</div>`;
-        return;
-    }
-    box.innerHTML = services.map((s, i) => `
+    if(services.length === 0){ box.innerHTML = `<div class="card empty">No services added yet</div>`; return; }
+    box.innerHTML = services.map((s,i)=>`
         <div class="list-item">
             <div class="list-title">${esc(s.name)} — <span style="color:#00bfff;">${money(s.price)}</span></div>
             ${s.desc ? `<div class="muted">${esc(s.desc)}</div>` : ""}
@@ -811,7 +558,6 @@ function renderServices(){
         </div>
     `).join("");
 }
-
 function updateJobTypeSelector(){
     const select = document.getElementById("jobType");
     const current = select.value;
@@ -823,62 +569,25 @@ function updateJobTypeSelector(){
 function saveClient(){
     const name = document.getElementById("clientName").value.trim();
     if(!name){ alert("Client name required"); return; }
-    const client = {
-        id: editClientIndex === -1 ? newId() : clients[editClientIndex].id,
-        name,
-        phone: document.getElementById("clientPhone").value.trim(),
-        email: document.getElementById("clientEmail").value.trim(),
-        address: document.getElementById("clientAddress").value.trim(),
-        notes: document.getElementById("clientNotes").value.trim()
-    };
-    if(editClientIndex === -1) clients.push(client);
-    else clients[editClientIndex] = client;
-    cancelClientEdit();
-    saveData();
-    renderClients();
-    updateClientSelectors();
+    const client = { id: editClientIndex === -1 ? newId() : clients[editClientIndex].id, name, phone: document.getElementById("clientPhone").value.trim(), email: document.getElementById("clientEmail").value.trim(), address: document.getElementById("clientAddress").value.trim(), notes: document.getElementById("clientNotes").value.trim() };
+    if(editClientIndex === -1) clients.push(client); else clients[editClientIndex] = client;
+    cancelClientEdit(); saveData(); renderClients(); updateClientSelectors();
 }
-
 function editClient(index){
     const c = clients[index];
-    document.getElementById("clientName").value = c.name;
-    document.getElementById("clientPhone").value = c.phone;
-    document.getElementById("clientEmail").value = c.email;
-    document.getElementById("clientAddress").value = c.address;
-    document.getElementById("clientNotes").value = c.notes;
-    editClientIndex = index;
-    document.getElementById("clientSaveBtn").textContent = "Update client";
-    document.getElementById("clientCancelBtn").style.display = "inline-block";
-    showPage("clients");
-    window.scrollTo({top:0,behavior:"smooth"});
+    document.getElementById("clientName").value = c.name; document.getElementById("clientPhone").value = c.phone; document.getElementById("clientEmail").value = c.email; document.getElementById("clientAddress").value = c.address; document.getElementById("clientNotes").value = c.notes;
+    editClientIndex = index; document.getElementById("clientSaveBtn").textContent = "Update client"; document.getElementById("clientCancelBtn").style.display = "inline-block";
+    showPage("clients"); window.scrollTo({top:0,behavior:"smooth"});
 }
-
-function deleteClient(index){
-    if(!confirm("Delete this client?")) return;
-    clients.splice(index,1);
-    saveData();
-    renderClients();
-    updateClientSelectors();
-}
-
+function deleteClient(index){ if(!confirm("Delete this client?")) return; clients.splice(index,1); saveData(); renderClients(); updateClientSelectors(); }
 function cancelClientEdit(){
-    editClientIndex = -1;
-    document.getElementById("clientName").value = "";
-    document.getElementById("clientPhone").value = "";
-    document.getElementById("clientEmail").value = "";
-    document.getElementById("clientAddress").value = "";
-    document.getElementById("clientNotes").value = "";
-    document.getElementById("clientSaveBtn").textContent = "Add client";
-    document.getElementById("clientCancelBtn").style.display = "none";
+    editClientIndex = -1; document.getElementById("clientName").value = ""; document.getElementById("clientPhone").value = ""; document.getElementById("clientEmail").value = ""; document.getElementById("clientAddress").value = ""; document.getElementById("clientNotes").value = "";
+    document.getElementById("clientSaveBtn").textContent = "Add client"; document.getElementById("clientCancelBtn").style.display = "none";
 }
-
 function renderClients(){
     const table = document.getElementById("clientTable");
-    if(clients.length === 0){
-        table.innerHTML = `<tr><td colspan="5" class="empty">No clients yet</td></tr>`;
-        return;
-    }
-    table.innerHTML = clients.map((c,i) => `
+    if(clients.length === 0){ table.innerHTML = `<tr><td colspan="5" class="empty">No clients yet</td></tr>`; return; }
+    table.innerHTML = clients.map((c,i)=>`
         <tr>
             <td><strong>${esc(c.name)}</strong></td>
             <td>${esc(c.phone)}</td>
@@ -893,7 +602,6 @@ function renderClients(){
         </tr>
     `).join("");
 }
-
 function updateClientSelectors(){
     ["jobClient", "estimateClient", "invoiceClient"].forEach(id => {
         const select = document.getElementById(id);
@@ -907,66 +615,28 @@ function updateClientSelectors(){
 function saveJob(){
     const clientId = document.getElementById("jobClient").value;
     const date = document.getElementById("jobDate").value;
-    if(!clientId){ alert("Please select a client"); return; }
-    if(!date){ alert("Please select a date"); return; }
-    const job = {
-        id: editJobIndex === -1 ? newId() : jobs[editJobIndex].id,
-        clientId,
-        date,
-        time: document.getElementById("jobTime").value,
-        type: document.getElementById("jobType").value,
-        price: Number(document.getElementById("jobPrice").value || 0),
-        notes: document.getElementById("jobNotes").value.trim()
-    };
-    if(editJobIndex === -1) jobs.push(job);
-    else jobs[editJobIndex] = job;
-    cancelJobEdit();
-    saveData();
-    renderJobs();
+    if(!clientId || !date){ alert("Please select a client and date"); return; }
+    const job = { id: editJobIndex === -1 ? newId() : jobs[editJobIndex].id, clientId, date, time: document.getElementById("jobTime").value, type: document.getElementById("jobType").value, price: Number(document.getElementById("jobPrice").value || 0), notes: document.getElementById("jobNotes").value.trim() };
+    if(editJobIndex === -1) jobs.push(job); else jobs[editJobIndex] = job;
+    cancelJobEdit(); saveData(); renderJobs();
 }
-
 function editJob(index){
     const j = jobs[index];
-    document.getElementById("jobClient").value = j.clientId || "";
-    document.getElementById("jobDate").value = j.date || "";
-    document.getElementById("jobTime").value = j.time || "";
-    document.getElementById("jobType").value = j.type || "";
-    document.getElementById("jobPrice").value = j.price || "";
-    document.getElementById("jobNotes").value = j.notes || "";
-    editJobIndex = index;
-    document.getElementById("jobSaveBtn").textContent = "Update job";
-    document.getElementById("jobCancelBtn").style.display = "inline-block";
-    showPage("jobs");
-    window.scrollTo({top:0,behavior:"smooth"});
+    document.getElementById("jobClient").value = j.clientId || ""; document.getElementById("jobDate").value = j.date || ""; document.getElementById("jobTime").value = j.time || ""; document.getElementById("jobType").value = j.type || ""; document.getElementById("jobPrice").value = j.price || ""; document.getElementById("jobNotes").value = j.notes || "";
+    editJobIndex = index; document.getElementById("jobSaveBtn").textContent = "Update job"; document.getElementById("jobCancelBtn").style.display = "inline-block";
+    showPage("jobs"); window.scrollTo({top:0,behavior:"smooth"});
 }
-
-function deleteJob(index){
-    if(!confirm("Delete this job?")) return;
-    jobs.splice(index,1);
-    saveData();
-    renderJobs();
-}
-
+function deleteJob(index){ if(!confirm("Delete this job?")) return; jobs.splice(index,1); saveData(); renderJobs(); }
 function cancelJobEdit(){
-    editJobIndex = -1;
-    document.getElementById("jobClient").value = "";
-    document.getElementById("jobDate").value = today();
-    document.getElementById("jobTime").value = "";
-    document.getElementById("jobPrice").value = "";
-    document.getElementById("jobNotes").value = "";
-    document.getElementById("jobSaveBtn").textContent = "Add job";
-    document.getElementById("jobCancelBtn").style.display = "none";
+    editJobIndex = -1; document.getElementById("jobClient").value = ""; document.getElementById("jobDate").value = today(); document.getElementById("jobTime").value = ""; document.getElementById("jobPrice").value = ""; document.getElementById("jobNotes").value = "";
+    document.getElementById("jobSaveBtn").textContent = "Add job"; document.getElementById("jobCancelBtn").style.display = "none";
 }
-
 function renderJobs(){
     const box = document.getElementById("jobList");
-    if(jobs.length === 0){
-        box.innerHTML = `<div class="card empty">No cleaning jobs yet</div>`;
-        return;
-    }
+    if(jobs.length === 0){ box.innerHTML = `<div class="card empty">No cleaning jobs yet</div>`; return; }
     box.innerHTML = jobs.map((j,i)=>`
         <div class="list-item">
-            <div class="list-title">${esc(j.type || "Cleaning")} — ${esc(clientName(j.clientId))}</div>
+            <div class="list-title">${esc(j.type || "Cleaning")} — ${esc(clientObj(j.clientId)?.name || "Unknown")}</div>
             <div class="muted">${esc(j.date)} ${j.time ? " • " + esc(j.time) : ""} • ${money(j.price)}</div>
             ${j.notes ? `<div class="muted">${esc(j.notes)}</div>` : ""}
             <div class="actions">
@@ -981,62 +651,27 @@ function renderJobs(){
 function saveEstimate(){
     const clientId = document.getElementById("estimateClient").value;
     if(!clientId){ alert("Please select a client"); return; }
-    const estimate = {
-        id: editEstimateIndex === -1 ? newId() : estimates[editEstimateIndex].id,
-        clientId,
-        date: document.getElementById("estimateDate").value,
-        valid: document.getElementById("estimateValid").value,
-        amount: Number(document.getElementById("estimateAmount").value || 0),
-        notes: document.getElementById("estimateNotes").value.trim()
-    };
-    if(editEstimateIndex === -1) estimates.push(estimate);
-    else estimates[editEstimateIndex] = estimate;
-    cancelEstimateEdit();
-    saveData();
-    renderEstimates();
+    const estimate = { id: editEstimateIndex === -1 ? newId() : estimates[editEstimateIndex].id, clientId, date: document.getElementById("estimateDate").value, valid: document.getElementById("estimateValid").value, amount: Number(document.getElementById("estimateAmount").value || 0), notes: document.getElementById("estimateNotes").value.trim() };
+    if(editEstimateIndex === -1) estimates.push(estimate); else estimates[editEstimateIndex] = estimate;
+    cancelEstimateEdit(); saveData(); renderEstimates();
 }
-
 function editEstimate(index){
     const e = estimates[index];
-    document.getElementById("estimateClient").value = e.clientId;
-    document.getElementById("estimateDate").value = e.date;
-    document.getElementById("estimateValid").value = e.valid;
-    document.getElementById("estimateAmount").value = e.amount;
-    document.getElementById("estimateNotes").value = e.notes;
-    editEstimateIndex = index;
-    document.getElementById("estimateSaveBtn").textContent = "Update estimate";
-    document.getElementById("estimateCancelBtn").style.display = "inline-block";
-    showPage("estimates");
-    window.scrollTo({top:0,behavior:"smooth"});
+    document.getElementById("estimateClient").value = e.clientId; document.getElementById("estimateDate").value = e.date; document.getElementById("estimateValid").value = e.valid; document.getElementById("estimateAmount").value = e.amount; document.getElementById("estimateNotes").value = e.notes;
+    editEstimateIndex = index; document.getElementById("estimateSaveBtn").textContent = "Update estimate"; document.getElementById("estimateCancelBtn").style.display = "inline-block";
+    showPage("estimates"); window.scrollTo({top:0,behavior:"smooth"});
 }
-
-function deleteEstimate(index){
-    if(!confirm("Delete this estimate?")) return;
-    estimates.splice(index,1);
-    saveData();
-    renderEstimates();
-}
-
+function deleteEstimate(index){ if(!confirm("Delete this estimate?")) return; estimates.splice(index,1); saveData(); renderEstimates(); }
 function cancelEstimateEdit(){
-    editEstimateIndex = -1;
-    document.getElementById("estimateClient").value = "";
-    document.getElementById("estimateDate").value = today();
-    document.getElementById("estimateValid").value = "";
-    document.getElementById("estimateAmount").value = "";
-    document.getElementById("estimateNotes").value = "";
-    document.getElementById("estimateSaveBtn").textContent = "Add estimate";
-    document.getElementById("estimateCancelBtn").style.display = "none";
+    editEstimateIndex = -1; document.getElementById("estimateClient").value = ""; document.getElementById("estimateDate").value = today(); document.getElementById("estimateValid").value = ""; document.getElementById("estimateAmount").value = ""; document.getElementById("estimateNotes").value = "";
+    document.getElementById("estimateSaveBtn").textContent = "Add estimate"; document.getElementById("estimateCancelBtn").style.display = "none";
 }
-
 function renderEstimates(){
     const box = document.getElementById("estimateList");
-    if(estimates.length === 0){
-        box.innerHTML = `<div class="card empty">No estimates yet</div>`;
-        return;
-    }
+    if(estimates.length === 0){ box.innerHTML = `<div class="card empty">No estimates yet</div>`; return; }
     box.innerHTML = estimates.map((e,i)=>`
         <div class="list-item">
-            <div class="list-title">Estimate — ${esc(clientName(e.clientId))}</div>
+            <div class="list-title">Estimate — ${esc(clientObj(e.clientId)?.name || "Unknown")}</div>
             <div class="muted">Date: ${esc(e.date)} ${e.valid ? " • Valid until: " + esc(e.valid) : ""} • ${money(e.amount)}</div>
             ${e.notes ? `<div class="muted">${esc(e.notes)}</div>` : ""}
             <div class="actions">
@@ -1051,84 +686,57 @@ function renderEstimates(){
 function saveInvoice(){
     const clientId = document.getElementById("invoiceClient").value;
     if(!clientId){ alert("Please select a client"); return; }
-    const invoice = {
-        id: editInvoiceIndex === -1 ? newId() : invoices[editInvoiceIndex].id,
-        clientId,
-        number: document.getElementById("invoiceNumber").value.trim(),
-        date: document.getElementById("invoiceDate").value,
-        due: document.getElementById("invoiceDue").value,
-        amount: Number(document.getElementById("invoiceAmount").value || 0),
-        status: document.getElementById("invoiceStatus").value,
-        notes: document.getElementById("invoiceNotes").value.trim()
-    };
-    if(editInvoiceIndex === -1) invoices.push(invoice);
-    else invoices[editInvoiceIndex] = invoice;
-    cancelInvoiceEdit();
-    saveData();
-    renderInvoices();
+    const invoice = { id: editInvoiceIndex === -1 ? newId() : invoices[editInvoiceIndex].id, clientId, number: document.getElementById("invoiceNumber").value.trim(), date: document.getElementById("invoiceDate").value, due: document.getElementById("invoiceDue").value, amount: Number(document.getElementById("invoiceAmount").value || 0), status: document.getElementById("invoiceStatus").value, notes: document.getElementById("invoiceNotes").value.trim() };
+    if(editInvoiceIndex === -1) invoices.push(invoice); else invoices[editInvoiceIndex] = invoice;
+    cancelInvoiceEdit(); saveData(); renderInvoices();
 }
-
 function editInvoice(index){
     const i = invoices[index];
-    document.getElementById("invoiceClient").value = i.clientId;
-    document.getElementById("invoiceNumber").value = i.number;
-    document.getElementById("invoiceDate").value = i.date;
-    document.getElementById("invoiceDue").value = i.due;
-    document.getElementById("invoiceAmount").value = i.amount;
-    document.getElementById("invoiceStatus").value = i.status;
-    document.getElementById("invoiceNotes").value = i.notes;
-    editInvoiceIndex = index;
-    document.getElementById("invoiceSaveBtn").textContent = "Update invoice";
-    document.getElementById("invoiceCancelBtn").style.display = "inline-block";
-    showPage("invoices");
-    window.scrollTo({top:0,behavior:"smooth"});
+    document.getElementById("invoiceClient").value = i.clientId; document.getElementById("invoiceNumber").value = i.number; document.getElementById("invoiceDate").value = i.date; document.getElementById("invoiceDue").value = i.due; document.getElementById("invoiceAmount").value = i.amount; document.getElementById("invoiceStatus").value = i.status; document.getElementById("invoiceNotes").value = i.notes;
+    editInvoiceIndex = index; document.getElementById("invoiceSaveBtn").textContent = "Update invoice"; document.getElementById("invoiceCancelBtn").style.display = "inline-block";
+    showPage("invoices"); window.scrollTo({top:0,behavior:"smooth"});
 }
+function deleteInvoice(index){ if(!confirm("Delete this invoice?")) return; invoices.splice(index,1); saveData(); renderInvoices(); }
+function toggleInvoicePaid(index){ invoices[index].status = invoices[index].status === "paid" ? "unpaid" : "paid"; saveData(); renderInvoices(); }
 
-function deleteInvoice(index){
-    if(!confirm("Delete this invoice?")) return;
-    invoices.splice(index,1);
-    saveData();
-    renderInvoices();
-}
-
-function toggleInvoicePaid(index){
-    invoices[index].status = invoices[index].status === "paid" ? "unpaid" : "paid";
-    saveData();
-    renderInvoices();
+function sendInvoiceEmail(index){
+    const inv = invoices[index];
+    const client = clientObj(inv.clientId);
+    if(!client || !client.email){
+        alert("This client does not have an email address saved in their profile. Please update the client's email first.");
+        return;
+    }
+    const subject = encodeURIComponent(`Invoice ${inv.number || 'INV'} from Dylan's Residential Services`);
+    const body = encodeURIComponent(
+        `Hi ${client.name},\n\n` +
+        `Here are the details for your invoice (${inv.number || 'Invoice'}):\n\n` +
+        `Amount Due: ${money(inv.amount)}\n` +
+        `Invoice Date: ${inv.date}\n` +
+        `Due Date: ${inv.due || 'Immediate'}\n\n` +
+        `${inv.notes ? 'Notes: ' + inv.notes + '\n\n' : ''}` +
+        `Thank you for your business!\n\n` +
+        `Dylan's Residential Services\nABN 25 447 605 581`
+    );
+    window.location.href = `mailto:${client.email}?subject=${subject}&body=${body}`;
 }
 
 function cancelInvoiceEdit(){
-    editInvoiceIndex = -1;
-    document.getElementById("invoiceClient").value = "";
-    document.getElementById("invoiceNumber").value = "";
-    document.getElementById("invoiceDate").value = today();
-    document.getElementById("invoiceDue").value = "";
-    document.getElementById("invoiceAmount").value = "";
-    document.getElementById("invoiceStatus").value = "unpaid";
-    document.getElementById("invoiceNotes").value = "";
-    document.getElementById("invoiceSaveBtn").textContent = "Add invoice";
-    document.getElementById("invoiceCancelBtn").style.display = "none";
+    editInvoiceIndex = -1; document.getElementById("invoiceClient").value = ""; document.getElementById("invoiceNumber").value = ""; document.getElementById("invoiceDate").value = today(); document.getElementById("invoiceDue").value = ""; document.getElementById("invoiceAmount").value = ""; document.getElementById("invoiceStatus").value = "unpaid"; document.getElementById("invoiceNotes").value = "";
+    document.getElementById("invoiceSaveBtn").textContent = "Add invoice"; document.getElementById("invoiceCancelBtn").style.display = "none";
 }
-
 function renderInvoices(){
     const box = document.getElementById("invoiceList");
-    if(invoices.length === 0){
-        box.innerHTML = `<div class="card empty">No invoices yet</div>`;
-        return;
-    }
+    if(invoices.length === 0){ box.innerHTML = `<div class="card empty">No invoices yet</div>`; return; }
     box.innerHTML = invoices.map((i,index)=>`
         <div class="list-item">
-            <div class="list-title">${esc(i.number || "Invoice")} — ${esc(clientName(i.clientId))}</div>
+            <div class="list-title">${esc(i.number || "Invoice")} — ${esc(clientObj(i.clientId)?.name || "Unknown")}</div>
             <div class="muted">${esc(i.date)} ${i.due ? " • Due " + esc(i.due) : ""} • ${money(i.amount)}</div>
-            <div style="margin-top:8px">
-                <span class="badge ${i.status}">${i.status === "paid" ? "PAID" : "UNPAID"}</span>
-            </div>
+            <div style="margin-top:8px"><span class="badge ${i.status}">${i.status === "paid" ? "PAID" : "UNPAID"}</span></div>
             ${i.notes ? `<div class="muted">${esc(i.notes)}</div>` : ""}
             <div class="actions">
                 <button class="primary" type="button" onclick="editInvoice(${index})">Edit</button>
-                <button class="${i.status === "paid" ? "secondary" : "success"}" type="button" onclick="toggleInvoicePaid(${index})">
-                    ${i.status === "paid" ? "Mark unpaid" : "Mark paid"}
-                </button>
+                <button class="info" type="button" onclick="sendInvoiceEmail(${index})">Send Email</button>
+                <button class="${i.status === "paid" ? "secondary" : "success"}" type="button" onclick="toggleInvoicePaid(${index})">${i.status === "paid" ? "Mark unpaid" : "Mark paid"}</button>
                 <button class="danger" type="button" onclick="deleteInvoice(${index})">Delete</button>
             </div>
         </div>
@@ -1139,56 +747,24 @@ function renderInvoices(){
 function saveExpense(){
     const amount = Number(document.getElementById("expenseAmount").value || 0);
     if(amount <= 0){ alert("Please enter an expense amount"); return; }
-    const expense = {
-        id: editExpenseIndex === -1 ? newId() : expenses[editExpenseIndex].id,
-        date: document.getElementById("expenseDate").value,
-        category: document.getElementById("expenseCategory").value,
-        amount,
-        description: document.getElementById("expenseDescription").value.trim()
-    };
-    if(editExpenseIndex === -1) expenses.push(expense);
-    else expenses[editExpenseIndex] = expense;
-    cancelExpenseEdit();
-    saveData();
-    renderExpenses();
+    const expense = { id: editExpenseIndex === -1 ? newId() : expenses[editExpenseIndex].id, date: document.getElementById("expenseDate").value, category: document.getElementById("expenseCategory").value, amount, description: document.getElementById("expenseDescription" ).value.trim() };
+    if(editExpenseIndex === -1) expenses.push(expense); else expenses[editExpenseIndex] = expense;
+    cancelExpenseEdit(); saveData(); renderExpenses();
 }
-
 function editExpense(index){
     const e = expenses[index];
-    document.getElementById("expenseDate").value = e.date;
-    document.getElementById("expenseCategory").value = e.category;
-    document.getElementById("expenseAmount").value = e.amount;
-    document.getElementById("expenseDescription").value = e.description;
-    editExpenseIndex = index;
-    document.getElementById("expenseSaveBtn").textContent = "Update expense";
-    document.getElementById("expenseCancelBtn").style.display = "inline-block";
-    showPage("expenses");
-    window.scrollTo({top:0,behavior:"smooth"});
+    document.getElementById("expenseDate").value = e.date; document.getElementById("expenseCategory").value = e.category; document.getElementById("expenseAmount").value = e.amount; document.getElementById("expenseDescription").value = e.description;
+    editExpenseIndex = index; document.getElementById("expenseSaveBtn").textContent = "Update expense"; document.getElementById("expenseCancelBtn").style.display = "inline-block";
+    showPage("expenses"); window.scrollTo({top:0,behavior:"smooth"});
 }
-
-function deleteExpense(index){
-    if(!confirm("Delete this expense?")) return;
-    expenses.splice(index,1);
-    saveData();
-    renderExpenses();
-}
-
+function deleteExpense(index){ if(!confirm("Delete this expense?")) return; expenses.splice(index,1); saveData(); renderExpenses(); }
 function cancelExpenseEdit(){
-    editExpenseIndex = -1;
-    document.getElementById("expenseDate").value = today();
-    document.getElementById("expenseCategory").value = "Cleaning supplies";
-    document.getElementById("expenseAmount").value = "";
-    document.getElementById("expenseDescription").value = "";
-    document.getElementById("expenseSaveBtn").textContent = "Add expense";
-    document.getElementById("expenseCancelBtn").style.display = "none";
+    editExpenseIndex = -1; document.getElementById("expenseDate").value = today(); document.getElementById("expenseCategory").value = "Cleaning supplies"; document.getElementById("expenseAmount").value = ""; document.getElementById("expenseDescription").value = "";
+    document.getElementById("expenseSaveBtn").textContent = "Add expense"; document.getElementById("expenseCancelBtn").style.display = "none";
 }
-
 function renderExpenses(){
     const box = document.getElementById("expenseList");
-    if(expenses.length === 0){
-        box.innerHTML = `<div class="card empty">No expenses yet</div>`;
-        return;
-    }
+    if(expenses.length === 0){ box.innerHTML = `<div class="card empty">No expenses yet</div>`; return; }
     box.innerHTML = expenses.map((e,i)=>`
         <div class="list-item">
             <div class="list-title">${esc(e.category)} — ${money(e.amount)}</div>
@@ -1207,49 +783,27 @@ function updateDashboard(){
     const paid = invoices.filter(i => i.status === "paid").reduce((sum,i)=>sum + Number(i.amount || 0),0);
     const unpaid = invoices.filter(i => i.status !== "paid").reduce((sum,i)=>sum + Number(i.amount || 0),0);
     const expense = expenses.reduce((sum,e)=>sum + Number(e.amount || 0),0);
-    const profit = paid - expense;
-
     document.getElementById("paidTotal").textContent = money(paid);
     document.getElementById("unpaidTotal").textContent = money(unpaid);
     document.getElementById("expenseTotal").textContent = money(expense);
-    document.getElementById("profitTotal").textContent = money(profit);
+    document.getElementById("profitTotal").textContent = money(paid - expense);
     renderUpcomingJobs();
 }
-
 function renderUpcomingJobs(){
     const box = document.getElementById("upcomingJobs");
-    const upcoming = jobs
-        .map((j,i)=>({j,i}))
-        .filter(x => x.j.date >= today())
-        .sort((a,b)=>(a.j.date + (a.j.time || "")).localeCompare(b.j.date + (b.j.time || "")))
-        .slice(0,10);
-
-    if(upcoming.length === 0){
-        box.innerHTML = `<div class="empty">No upcoming cleaning jobs</div>`;
-        return;
-    }
-
+    const upcoming = jobs.map((j,i)=>({j,i})).filter(x => x.j.date >= today()).sort((a,b)=>(a.j.date + (a.j.time || "")).localeCompare(b.j.date + (b.j.time || ""))).slice(0,10);
+    if(upcoming.length === 0){ box.innerHTML = `<div class="empty">No upcoming cleaning jobs</div>`; return; }
     box.innerHTML = upcoming.map(({j,i})=>`
         <div class="list-item">
-            <div class="list-title">${esc(j.date)} ${j.time ? " " + esc(j.time) : ""} — ${esc(clientName(j.clientId))}</div>
+            <div class="list-title">${esc(j.date)} ${j.time ? " " + esc(j.time) : ""} — ${esc(clientObj(j.clientId)?.name || "Unknown")}</div>
             <div class="muted">${esc(j.type || "Cleaning")} — ${money(j.price)}</div>
-            <div class="actions">
-                <button class="primary" type="button" onclick="editJob(${i})">Edit</button>
-            </div>
+            <div class="actions"><button class="primary" type="button" onclick="editJob(${i})">Edit</button></div>
         </div>
     `).join("");
 }
 
 function refreshAll(){
-    renderServices();
-    updateJobTypeSelector();
-    renderClients();
-    updateClientSelectors();
-    renderJobs();
-    renderEstimates();
-    renderInvoices();
-    renderExpenses();
-    updateDashboard();
+    renderServices(); updateJobTypeSelector(); renderClients(); updateClientSelectors(); renderJobs(); renderEstimates(); renderInvoices(); renderExpenses(); updateDashboard();
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -1260,9 +814,7 @@ document.addEventListener("DOMContentLoaded", () => {
     refreshAll();
 });
 
-window.addEventListener("beforeunload", () => {
-    saveData();
-});
+window.addEventListener("beforeunload", () => saveData());
 </script>
 
 </body>
