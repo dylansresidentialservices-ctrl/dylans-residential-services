@@ -1,0 +1,20 @@
+let services = JSON.parse(localStorage.getItem('myServices')) || [];
+
+function addService() {
+    const name = document.getElementById('service-name').value;
+    const price = document.getElementById('service-price').value;
+    if (name && price) {
+        services.push({ name, price });
+        localStorage.setItem('myServices', JSON.stringify(services));
+        updateServiceDropdown();
+        alert('Service added!');
+    }
+}
+
+function updateServiceDropdown() {
+    const select = document.getElementById('job-service-select'); // Ensure your form uses this ID
+    select.innerHTML = '<option value="">Select a service...</option>';
+    services.forEach(s => {
+        select.innerHTML += `<option value="${s.price}">${s.name} ($${s.price})</option>`;
+    });
+}
