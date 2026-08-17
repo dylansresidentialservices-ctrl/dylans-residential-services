@@ -25,7 +25,7 @@
     <h1>Dylan's Residential Services</h1>
     <p style="color: #8899a6; margin-top: -5px;">Cleaning Business Manager • ABN 25 447 605 581</p>
 
-    <!-- Top Navigation Bar with Services Button Added -->
+    <!-- Top Navigation Bar -->
     <div class="nav-bar">
         <button class="nav-btn active" onclick="switchTab('dashboard')">Dashboard</button>
         <button class="nav-btn" onclick="switchTab('services')">Services</button>
@@ -50,8 +50,8 @@
             <h3>Manage Services & Prices</h3>
             <input type="text" id="service-name" placeholder="Service Name (e.g. Regular Clean)">
             <input type="number" id="service-price" placeholder="Price ($)">
-            <textarea id="service-desc" placeholder="Service Description (e.g. Kitchen, bathrooms, dusting, vacuuming & mopping)" rows="2"></textarea>
-            <button onclick="addService()" class="btn-primary" style="margin-top: 10px;">+ Add Service</button>
+            <textarea id="service-desc" placeholder="Service Description..." rows="2"></textarea>
+            <button onclick="addService()" class="btn-primary" style="margin-top: 10px;">+ Add Custom Service</button>
         </div>
 
         <div class="card">
@@ -78,7 +78,26 @@
             event.currentTarget.classList.add('active');
         }
 
-        let services = JSON.parse(localStorage.getItem('myServices')) || [];
+        // Default Bond Cleaning list if local storage is completely empty
+        const defaultServices = [
+            { name: "1 Bedroom 1 Bathroom Bond Cleaning", price: "350.00", desc: "Intensive end-of-lease bond clean designed to meet strict property manager standards." },
+            { name: "1 Bedroom 2 Bathroom Bond Cleaning", price: "400.00", desc: "Intensive end-of-lease bond clean designed to meet strict property manager standards." },
+            { name: "2 Bedroom 1 Bathroom Bond Cleaning", price: "420.00", desc: "Intensive end-of-lease bond clean designed to meet strict property manager standards." },
+            { name: "2 Bedroom 2 Bathroom Bond Cleaning", price: "455.00", desc: "Intensive end-of-lease bond clean designed to meet strict property manager standards." },
+            { name: "3 Bedroom 1 Bathroom Bond Cleaning", price: "490.00", desc: "Intensive end-of-lease bond clean designed to meet strict property manager standards." },
+            { name: "3 Bedroom 2 Bathroom Bond Cleaning", price: "525.00", desc: "Intensive end-of-lease bond clean designed to meet strict property manager standards." },
+            { name: "4 Bedroom 1 Bathroom Bond Cleaning", price: "560.00", desc: "Intensive end-of-lease bond clean designed to meet strict property manager standards." },
+            { name: "4 Bedroom 2 Bathroom Bond Cleaning", price: "595.00", desc: "Intensive end-of-lease bond clean designed to meet strict property manager standards." },
+            { name: "4 Bedroom 3 Bathroom Bond Cleaning", price: "630.00", desc: "Intensive end-of-lease bond clean designed to meet strict property manager standards." },
+            { name: "5 Bedroom 2 Bathroom Bond Cleaning", price: "665.00", desc: "Intensive end-of-lease bond clean designed to meet strict property manager standards." },
+            { name: "5 Bedroom 3 Bathroom Bond Cleaning", price: "700.00", desc: "Intensive end-of-lease bond clean designed to meet strict property manager standards." }
+        ];
+
+        let services = JSON.parse(localStorage.getItem('myServices'));
+        if (!services || services.length === 0) {
+            services = defaultServices;
+            localStorage.setItem('myServices', JSON.stringify(services));
+        }
         
         function addService() {
             const name = document.getElementById('service-name').value;
@@ -115,24 +134,11 @@
             }
 
             services.forEach((s, i) => {
-                list.innerHTML += `
-                    <div>
-                        <strong>${s.name}</strong> - $${s.price}
-                        <br><small style="color: #8899a6;">${s.desc || 'No description provided'}</small>
-                    </div>
-                    <button onclick="deleteService(${i})" class="btn-danger">Delete</button>
-                `;
-                // Wrap each in an <li> block properly
-            });
-            
-            // Re-render list items cleanly with flex layout structure
-            list.innerHTML = '';
-            services.forEach((s, i) => {
                 let li = document.createElement('li');
                 li.innerHTML = `
                     <div style="flex-grow: 1; margin-right: 10px;">
                         <strong style="font-size: 1.1em;">${s.name}</strong> <span style="color: #00bfff; font-weight: bold;">($${s.price})</span>
-                        <div style="color: #8899a6; font-size: 0.9em; margin-top: 3px;">${s.desc}</div>
+                        <div style="color: #8899a6; font-size: 0.9em; margin-top: 3px;">${s.desc || ''}</div>
                     </div>
                     <button onclick="deleteService(${i})" class="btn-danger">Delete</button>
                 `;
