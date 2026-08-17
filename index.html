@@ -8,13 +8,8 @@
     <style>
         body { font-family: sans-serif; background: #0d1215; color: white; padding: 20px; }
         .card { background: #1a2226; padding: 15px; border-radius: 10px; margin-bottom: 20px; }
-        .btn-primary { background: #0077cc; color: white; border: none; padding: 10px; border-radius: 5px; cursor: pointer; width: 100%; }
-        .btn-secondary { background: #334148; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; margin-bottom: 10px; }
-        .btn-danger { background: #cc0000; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; margin-left: 10px; }
-        input, select { width: 100%; padding: 10px; margin: 5px 0; border-radius: 5px; border: none; box-sizing: border-box; }
-        li { margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
-        ul { padding-left: 0; list-style: none; }
-        .hidden { display: none; }
+        .btn-primary { background: #0077cc; color: white; border: none; padding: 10px; border-radius: 5px; cursor: pointer; }
+        input, select { width: 100%; padding: 10px; margin: 5px 0; border-radius: 5px; border: none; }
     </style>
 </head>
 <body>
@@ -23,18 +18,10 @@
 
     <!-- 1. SERVICES MANAGER SECTION -->
     <div class="card">
-        <h3>Services & Prices</h3>
-        
-        <!-- Toggle Button to Open Form -->
-        <button onclick="toggleServiceForm()" class="btn-secondary" id="toggle-form-btn">+ Add New Service</button>
-
-        <!-- Hidden Form Container (Appears when button is clicked) -->
-        <div id="service-form-container" class="hidden" style="margin-bottom: 15px; border-top: 1px solid #334148; padding-top: 10px;">
-            <input type="text" id="service-name" placeholder="Service Name (e.g. Regular Clean)">
-            <input type="number" id="service-price" placeholder="Price ($)">
-            <button onclick="addService()" class="btn-primary">Save Service</button>
-        </div>
-
+        <h3>Manage Services & Prices</h3>
+        <input type="text" id="service-name" placeholder="Service Name (e.g. Regular Clean)">
+        <input type="number" id="service-price" placeholder="Price ($)">
+        <button onclick="addService()" class="btn-primary">Add Service</button>
         <ul id="services-list"></ul>
     </div>
 
@@ -51,18 +38,6 @@
     <script>
         let services = JSON.parse(localStorage.getItem('myServices')) || [];
         
-        function toggleServiceForm() {
-            const formContainer = document.getElementById('service-form-container');
-            const btn = document.getElementById('toggle-form-btn');
-            if (formContainer.classList.contains('hidden')) {
-                formContainer.classList.remove('hidden');
-                btn.innerText = 'Cancel';
-            } else {
-                formContainer.classList.add('hidden');
-                btn.innerText = '+ Add New Service';
-            }
-        }
-
         function addService() {
             const name = document.getElementById('service-name').value;
             const price = document.getElementById('service-price').value;
@@ -70,20 +45,8 @@
                 services.push({ name, price });
                 localStorage.setItem('myServices', JSON.stringify(services));
                 renderServices();
-                
-                // Clear and hide form
-                document.getElementById('service-name').value = '';
-                document.getElementById('service-price').value = '';
-                toggleServiceForm();
-            } else {
-                alert('Please enter both a service name and a price.');
+                alert('Service added!');
             }
-        }
-
-        function deleteService(index) {
-            services.splice(index, 1);
-            localStorage.setItem('myServices', JSON.stringify(services));
-            renderServices();
         }
 
         function renderServices() {
@@ -91,20 +54,10 @@
             const select = document.getElementById('job-service-select');
             list.innerHTML = '';
             select.innerHTML = '<option value="">Select a service...</option>';
-            
             services.forEach((s, i) => {
-                list.innerHTML += `<li><span>${s.name}: $${s.price}</span> <button onclick="deleteService(${i})" class="btn-danger">Delete</button></li>`;
+                list.innerHTML += `<li>${s.name}: $${s.price}</li>`;
                 select.innerHTML += `<option value="${s.price}">${s.name} ($${s.price})</option>`;
             });
-        }
-
-        function saveJob() {
-            const price = document.getElementById('job-price').value;
-            if(price) {
-                alert('Job saved with price: $' + price);
-            } else {
-                alert('Please select or enter a price for the job.');
-            }
         }
 
         // Initialize on load
