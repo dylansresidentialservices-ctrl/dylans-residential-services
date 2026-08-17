@@ -1,0 +1,5 @@
+<!-- In your New Job Form -->
+<select id="job-service-select" onchange="document.getElementById('job-price').value = this.value">
+    <option value="">Select a service...</option>
+</select>
+<input type="number" id="job-price" placeholder="Price">
