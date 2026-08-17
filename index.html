@@ -8,12 +8,12 @@
     <style>
         body { font-family: sans-serif; background: #0d1215; color: white; padding: 20px; }
         .card { background: #1a2226; padding: 15px; border-radius: 10px; margin-bottom: 20px; }
-        .btn-primary { background: #0077cc; color: white; border: none; padding: 10px; border-radius: 5px; cursor: pointer; width: 100%; }
-        .btn-danger { background: #cc0000; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; }
+        .btn-primary { background: #0077cc; color: white; border: none; padding: 12px; border-radius: 5px; cursor: pointer; width: 100%; font-size: 16px; font-weight: bold; }
+        .btn-danger { background: #cc0000; color: white; border: none; padding: 6px 12px; border-radius: 3px; cursor: pointer; }
         .nav-bar { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
         .nav-btn { background: #1a2226; color: white; border: none; padding: 10px 15px; border-radius: 8px; cursor: pointer; }
         .nav-btn.active { background: #0077cc; }
-        input, textarea, select { width: 100%; padding: 10px; margin: 5px 0; border-radius: 5px; border: none; box-sizing: border-box; background: #2a353b; color: white; }
+        input, textarea, select { width: 100%; padding: 12px; margin: 8px 0; border-radius: 5px; border: 1px solid #445566; box-sizing: border-box; background: #2a353b; color: white; font-size: 16px; }
         li { margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; background: #11171a; padding: 12px; border-radius: 5px; }
         ul { padding-left: 0; list-style: none; }
         .tab-content { display: none; }
@@ -50,8 +50,8 @@
             <h3>Manage Services & Prices</h3>
             <input type="text" id="service-name" placeholder="Service Name (e.g. Regular Clean)">
             <input type="number" id="service-price" placeholder="Price ($)">
-            <textarea id="service-desc" placeholder="Service Description..." rows="2"></textarea>
-            <button onclick="addService()" class="btn-primary" style="margin-top: 10px;">+ Add Custom Service</button>
+            <textarea id="service-desc" placeholder="Service Description..." rows="3"></textarea>
+            <button type="button" onclick="addService()" class="btn-primary" style="margin-top: 10px;">+ Add Custom Service</button>
         </div>
 
         <div class="card">
@@ -78,7 +78,6 @@
             event.currentTarget.classList.add('active');
         }
 
-        // Default Bond Cleaning list if local storage is completely empty
         const defaultServices = [
             { name: "1 Bedroom 1 Bathroom Bond Cleaning", price: "350.00", desc: "Intensive end-of-lease bond clean designed to meet strict property manager standards." },
             { name: "1 Bedroom 2 Bathroom Bond Cleaning", price: "400.00", desc: "Intensive end-of-lease bond clean designed to meet strict property manager standards." },
@@ -100,21 +99,25 @@
         }
         
         function addService() {
-            const name = document.getElementById('service-name').value;
-            const price = document.getElementById('service-price').value;
-            const desc = document.getElementById('service-desc').value;
+            const nameField = document.getElementById('service-name');
+            const priceField = document.getElementById('service-price');
+            const descField = document.getElementById('service-desc');
 
-            if (name && price) {
+            const name = nameField.value.trim();
+            const price = priceField.value.trim();
+            const desc = descField.value.trim();
+
+            if (name !== "" && price !== "") {
                 services.push({ name, price, desc });
                 localStorage.setItem('myServices', JSON.stringify(services));
                 renderServices();
                 
-                document.getElementById('service-name').value = '';
-                document.getElementById('service-price').value = '';
-                document.getElementById('service-desc').value = '';
+                nameField.value = '';
+                priceField.value = '';
+                descField.value = '';
                 alert('Service added successfully!');
             } else {
-                alert('Please enter both a service name and a price.');
+                alert('Please type both a service name and a price before clicking add.');
             }
         }
 
@@ -140,7 +143,7 @@
                         <strong style="font-size: 1.1em;">${s.name}</strong> <span style="color: #00bfff; font-weight: bold;">($${s.price})</span>
                         <div style="color: #8899a6; font-size: 0.9em; margin-top: 3px;">${s.desc || ''}</div>
                     </div>
-                    <button onclick="deleteService(${i})" class="btn-danger">Delete</button>
+                    <button type="button" onclick="deleteService(${i})" class="btn-danger">Delete</button>
                 `;
                 list.appendChild(li);
             });
