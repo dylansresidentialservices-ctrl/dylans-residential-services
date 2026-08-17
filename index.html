@@ -971,12 +971,12 @@ function editJob(index){
 
     const j = jobs[index];
 
-    document.getElementById("jobClient").value = j.clientId;
-    document.getElementById("jobDate").value = j.date;
-    document.getElementById("jobTime").value = j.time;
-    document.getElementById("jobType").value = j.type;
-    document.getElementById("jobPrice").value = j.price;
-    document.getElementById("jobNotes").value = j.notes;
+    document.getElementById("jobClient").value = j.clientId || "";
+    document.getElementById("jobDate").value = j.date || "";
+    document.getElementById("jobTime").value = j.time || "";
+    document.getElementById("jobType").value = j.type || "Regular cleaning";
+    document.getElementById("jobPrice").value = j.price || "";
+    document.getElementById("jobNotes").value = j.notes || "";
 
     editJobIndex = index;
 
@@ -1024,18 +1024,12 @@ function renderJobs(){
         return;
     }
 
-    const sorted = jobs
-        .map((j,i)=>({j,i}))
-        .sort((a,b)=>
-            (a.j.date + a.j.time).localeCompare(b.j.date + b.j.time)
-        );
-
-    box.innerHTML = sorted.map(({j,i}) => `
+    box.innerHTML = jobs.map((j,i)=>`
 
         <div class="list-item">
 
             <div class="list-title">
-                ${esc(j.type)} — ${esc(clientName(j.clientId))}
+                ${esc(j.type || "Cleaning")} — ${esc(clientName(j.clientId))}
             </div>
 
             <div class="muted">
@@ -1529,8 +1523,8 @@ function renderUpcomingJobs(){
         .map((j,i)=>({j,i}))
         .filter(x => x.j.date >= today())
         .sort((a,b)=>
-            (a.j.date + a.j.time)
-            .localeCompare(b.j.date + b.j.time)
+            (a.j.date + (a.j.time || ""))
+            .localeCompare(b.j.date + (b.j.time || ""))
         )
         .slice(0,10);
 
@@ -1551,7 +1545,7 @@ function renderUpcomingJobs(){
             </div>
 
             <div class="muted">
-                ${esc(j.type)} — ${money(j.price)}
+                ${esc(j.type || "Cleaning")} — ${money(j.price)}
             </div>
 
             <div class="actions">
