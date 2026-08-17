@@ -1,0 +1,10 @@
+<!-- Services Setup Section -->
+<div id="services-section" class="card">
+    <h3>Manage Services</h3>
+    <div class="form-group">
+        <input type="text" id="service-name" placeholder="Service Name (e.g. Regular Clean)">
+        <input type="number" id="service-price" placeholder="Price ($)">
+        <button onclick="addService()" class="btn-primary">Add Service</button>
+    </div>
+    <ul id="services-list"></ul>
+</div>
