@@ -311,7 +311,6 @@ th{
 
 <nav>
     <button class="nav-btn active" data-page="dashboard">Dashboard</button>
-    <button class="nav-btn" data-page="services">Services</button>
     <button class="nav-btn" data-page="jobs">Jobs</button>
     <button class="nav-btn" data-page="clients">Clients</button>
     <button class="nav-btn" data-page="estimates">Estimates</button>
@@ -357,10 +356,6 @@ th{
     <h3>Quick actions</h3>
 
     <div class="quick">
-        <button class="primary" onclick="showPage('services')">
-            + Manage services
-        </button>
-
         <button class="primary" onclick="showPage('jobs')">
             + New cleaning job
         </button>
@@ -378,46 +373,6 @@ th{
         </button>
     </div>
 </div>
-
-</section>
-
-
-<!-- SERVICES -->
-<section id="services" class="page">
-
-<h2>Services & Pricing</h2>
-
-<div class="card">
-
-<div class="form-grid two">
-
-<div class="field">
-<label>Service name</label>
-<input id="serviceName" placeholder="e.g. 2 Bedroom 1 Bathroom Bond Cleaning">
-</div>
-
-<div class="field">
-<label>Price ($)</label>
-<input id="servicePrice" type="number" step="0.01" min="0" placeholder="0.00">
-</div>
-
-<div class="field full">
-<label>Description / inclusions</label>
-<textarea id="serviceDesc" placeholder="Describe what is included in this service..."></textarea>
-</div>
-
-</div>
-
-<div class="actions">
-<button id="serviceSaveBtn" class="primary" onclick="saveService()">Add service</button>
-<button id="serviceCancelBtn" class="secondary" onclick="cancelServiceEdit()" style="display:none">
-Cancel
-</button>
-</div>
-
-</div>
-
-<div id="serviceList"></div>
 
 </section>
 
@@ -516,7 +471,12 @@ Cancel
 <div class="field">
 <label>Cleaning type</label>
 <select id="jobType">
-<!-- Populated dynamically from saved services -->
+<option>Regular cleaning</option>
+<option>Deep cleaning</option>
+<option>End of lease cleaning</option>
+<option>Bond cleaning</option>
+<option>Window cleaning</option>
+<option>Other</option>
 </select>
 </div>
 
@@ -716,31 +676,15 @@ Cancel
 <script>
 
 /* =========================
-   DATA & DEFAULTS
+   DATA
 ========================= */
 
-const defaultServices = [
-    { id: "s1", name: "1 Bedroom 1 Bathroom Bond Cleaning", price: 350, desc: "Intensive end-of-lease bond clean designed to meet strict property manager standards." },
-    { id: "s2", name: "1 Bedroom 2 Bathroom Bond Cleaning", price: 400, desc: "Intensive end-of-lease bond clean designed to meet strict property manager standards." },
-    { id: "s3", name: "2 Bedroom 1 Bathroom Bond Cleaning", price: 420, desc: "Intensive end-of-lease bond clean designed to meet strict property manager standards." },
-    { id: "s4", name: "2 Bedroom 2 Bathroom Bond Cleaning", price: 455, desc: "Intensive end-of-lease bond clean designed to meet strict property manager standards." },
-    { id: "s5", name: "3 Bedroom 1 Bathroom Bond Cleaning", price: 490, desc: "Intensive end-of-lease bond clean designed to meet strict property manager standards." },
-    { id: "s6", name: "3 Bedroom 2 Bathroom Bond Cleaning", price: 525, desc: "Intensive end-of-lease bond clean designed to meet strict property manager standards." },
-    { id: "s7", name: "4 Bedroom 1 Bathroom Bond Cleaning", price: 560, desc: "Intensive end-of-lease bond clean designed to meet strict property manager standards." },
-    { id: "s8", name: "4 Bedroom 2 Bathroom Bond Cleaning", price: 595, desc: "Intensive end-of-lease bond clean designed to meet strict property manager standards." },
-    { id: "s9", name: "4 Bedroom 3 Bathroom Bond Cleaning", price: 630, desc: "Intensive end-of-lease bond clean designed to meet strict property manager standards." },
-    { id: "s10", name: "5 Bedroom 2 Bathroom Bond Cleaning", price: 665, desc: "Intensive end-of-lease bond clean designed to meet strict property manager standards." },
-    { id: "s11", name: "5 Bedroom 3 Bathroom Bond Cleaning", price: 700, desc: "Intensive end-of-lease bond clean designed to meet strict property manager standards." }
-];
-
-let services = JSON.parse(localStorage.getItem("drs_services") || JSON.stringify(defaultServices));
 let clients = JSON.parse(localStorage.getItem("drs_clients") || "[]");
 let jobs = JSON.parse(localStorage.getItem("drs_jobs") || "[]");
 let estimates = JSON.parse(localStorage.getItem("drs_estimates") || "[]");
 let invoices = JSON.parse(localStorage.getItem("drs_invoices") || "[]");
 let expenses = JSON.parse(localStorage.getItem("drs_expenses") || "[]");
 
-let editServiceIndex = -1;
 let editClientIndex = -1;
 let editJobIndex = -1;
 let editEstimateIndex = -1;
@@ -753,7 +697,7 @@ let editExpenseIndex = -1;
 ========================= */
 
 function saveData(){
-    localStorage.setItem("drs_services", JSON.stringify(services));
+
     localStorage.setItem("drs_clients", JSON.stringify(clients));
     localStorage.setItem("drs_jobs", JSON.stringify(jobs));
     localStorage.setItem("drs_estimates", JSON.stringify(estimates));
@@ -795,12 +739,15 @@ function newId(){
 ========================= */
 
 document.querySelectorAll(".nav-btn").forEach(button => {
+
     button.addEventListener("click", () => {
         showPage(button.dataset.page);
     });
+
 });
 
 function showPage(page){
+
     document.querySelectorAll(".page").forEach(p => {
         p.classList.remove("active");
     });
@@ -816,116 +763,11 @@ function showPage(page){
 
 
 /* =========================
-   SERVICES
-========================= */
-
-function saveService(){
-    const name = document.getElementById("serviceName").value.trim();
-    const price = Number(document.getElementById("servicePrice").value || 0);
-
-    if(!name){
-        alert("Service name required");
-        return;
-    }
-
-    const service = {
-        id: editServiceIndex === -1 ? newId() : services[editServiceIndex].id,
-        name,
-        price,
-        desc: document.getElementById("serviceDesc").value.trim()
-    };
-
-    if(editServiceIndex === -1){
-        services.push(service);
-    }else{
-        services[editServiceIndex] = service;
-    }
-
-    cancelServiceEdit();
-    saveData();
-    renderServices();
-    updateJobTypeSelector();
-}
-
-function editService(index){
-    const s = services[index];
-
-    document.getElementById("serviceName").value = s.name;
-    document.getElementById("servicePrice").value = s.price;
-    document.getElementById("serviceDesc").value = s.desc || "";
-
-    editServiceIndex = index;
-
-    document.getElementById("serviceSaveBtn").textContent = "Update service";
-    document.getElementById("serviceCancelBtn").style.display = "inline-block";
-
-    showPage("services");
-    window.scrollTo({top:0,behavior:"smooth"});
-}
-
-function deleteService(index){
-    if(!confirm("Delete this service?")){
-        return;
-    }
-
-    services.splice(index, 1);
-    saveData();
-    renderServices();
-    updateJobTypeSelector();
-}
-
-function cancelServiceEdit(){
-    editServiceIndex = -1;
-
-    document.getElementById("serviceName").value = "";
-    document.getElementById("servicePrice").value = "";
-    document.getElementById("serviceDesc").value = "";
-
-    document.getElementById("serviceSaveBtn").textContent = "Add service";
-    document.getElementById("serviceCancelBtn").style.display = "none";
-}
-
-function renderServices(){
-    const box = document.getElementById("serviceList");
-
-    if(services.length === 0){
-        box.innerHTML = `<div class="card empty">No services added yet</div>`;
-        return;
-    }
-
-    box.innerHTML = services.map((s, i) => `
-        <div class="list-item">
-            <div class="list-title">
-                ${esc(s.name)} — <span style="color:#00bfff;">${money(s.price)}</span>
-            </div>
-            ${s.desc ? `<div class="muted">${esc(s.desc)}</div>` : ""}
-            <div class="actions">
-                <button class="primary" onclick="editService(${i})">Edit</button>
-                <button class="danger" onclick="deleteService(${i})">Delete</button>
-            </div>
-        </div>
-    `).join("");
-}
-
-function updateJobTypeSelector(){
-    const select = document.getElementById("jobType");
-    const current = select.value;
-
-    select.innerHTML = services.map(s => `
-        <option value="${esc(s.name)}">${esc(s.name)} (${money(s.price)})</option>
-    `).join("");
-
-    if([...select.options].some(o => o.value === current)){
-        select.value = current;
-    }
-}
-
-
-/* =========================
    CLIENTS
 ========================= */
 
 function saveClient(){
+
     const name = document.getElementById("clientName").value.trim();
 
     if(!name){
@@ -934,7 +776,10 @@ function saveClient(){
     }
 
     const client = {
-        id: editClientIndex === -1 ? newId() : clients[editClientIndex].id,
+        id: editClientIndex === -1
+            ? newId()
+            : clients[editClientIndex].id,
+
         name,
         phone: document.getElementById("clientPhone").value.trim(),
         email: document.getElementById("clientEmail").value.trim(),
@@ -955,6 +800,7 @@ function saveClient(){
 }
 
 function editClient(index){
+
     const c = clients[index];
 
     document.getElementById("clientName").value = c.name;
@@ -969,21 +815,28 @@ function editClient(index){
     document.getElementById("clientCancelBtn").style.display = "inline-block";
 
     showPage("clients");
-    window.scrollTo({top:0,behavior:"smooth"});
+
+    window.scrollTo({
+        top:0,
+        behavior:"smooth"
+    });
 }
 
 function deleteClient(index){
+
     if(!confirm("Delete this client?")){
         return;
     }
 
     clients.splice(index,1);
+
     saveData();
     renderClients();
     updateClientSelectors();
 }
 
 function cancelClientEdit(){
+
     editClientIndex = -1;
 
     document.getElementById("clientName").value = "";
@@ -997,14 +850,17 @@ function cancelClientEdit(){
 }
 
 function renderClients(){
+
     const table = document.getElementById("clientTable");
 
     if(clients.length === 0){
-        table.innerHTML = `<tr><td colspan="5" class="empty">No clients yet</td></tr>`;
+        table.innerHTML =
+            `<tr><td colspan="5" class="empty">No clients yet</td></tr>`;
         return;
     }
 
     table.innerHTML = clients.map((c,i) => `
+
         <tr>
             <td><strong>${esc(c.name)}</strong></td>
             <td>${esc(c.phone)}</td>
@@ -1012,27 +868,51 @@ function renderClients(){
             <td>${esc(c.address)}</td>
             <td>
                 <div class="actions">
-                    <button class="primary" onclick="editClient(${i})">Edit</button>
-                    <button class="danger" onclick="deleteClient(${i})">Delete</button>
+                    <button class="primary" onclick="editClient(${i})">
+                        Edit
+                    </button>
+
+                    <button class="danger" onclick="deleteClient(${i})">
+                        Delete
+                    </button>
                 </div>
             </td>
         </tr>
+
     `).join("");
 }
 
+
+/* =========================
+   CLIENT SELECTORS
+========================= */
+
 function updateClientSelectors(){
-    const selects = ["jobClient", "estimateClient", "invoiceClient"];
+
+    const selects = [
+        "jobClient",
+        "estimateClient",
+        "invoiceClient"
+    ];
 
     selects.forEach(id => {
+
         const select = document.getElementById(id);
         const current = select.value;
 
-        select.innerHTML = `<option value="">Select client</option>` +
-            clients.map(c => `<option value="${c.id}">${esc(c.name)}</option>`).join("");
+        select.innerHTML =
+            `<option value="">Select client</option>` +
+
+            clients.map(c =>
+                `<option value="${c.id}">
+                    ${esc(c.name)}
+                </option>`
+            ).join("");
 
         if(clients.some(c => c.id === current)){
             select.value = current;
         }
+
     });
 }
 
@@ -1042,6 +922,7 @@ function updateClientSelectors(){
 ========================= */
 
 function saveJob(){
+
     const clientId = document.getElementById("jobClient").value;
     const date = document.getElementById("jobDate").value;
 
@@ -1056,13 +937,23 @@ function saveJob(){
     }
 
     const job = {
-        id: editJobIndex === -1 ? newId() : jobs[editJobIndex].id,
+
+        id: editJobIndex === -1
+            ? newId()
+            : jobs[editJobIndex].id,
+
         clientId,
+
         date,
+
         time: document.getElementById("jobTime").value,
+
         type: document.getElementById("jobType").value,
+
         price: Number(document.getElementById("jobPrice").value || 0),
+
         notes: document.getElementById("jobNotes").value.trim()
+
     };
 
     if(editJobIndex === -1){
@@ -1077,12 +968,13 @@ function saveJob(){
 }
 
 function editJob(index){
+
     const j = jobs[index];
 
     document.getElementById("jobClient").value = j.clientId || "";
     document.getElementById("jobDate").value = j.date || "";
     document.getElementById("jobTime").value = j.time || "";
-    document.getElementById("jobType").value = j.type || "";
+    document.getElementById("jobType").value = j.type || "Regular cleaning";
     document.getElementById("jobPrice").value = j.price || "";
     document.getElementById("jobNotes").value = j.notes || "";
 
@@ -1092,25 +984,30 @@ function editJob(index){
     document.getElementById("jobCancelBtn").style.display = "inline-block";
 
     showPage("jobs");
+
     window.scrollTo({top:0,behavior:"smooth"});
 }
 
 function deleteJob(index){
+
     if(!confirm("Delete this job?")){
         return;
     }
 
     jobs.splice(index,1);
+
     saveData();
     renderJobs();
 }
 
 function cancelJobEdit(){
+
     editJobIndex = -1;
 
     document.getElementById("jobClient").value = "";
     document.getElementById("jobDate").value = today();
     document.getElementById("jobTime").value = "";
+    document.getElementById("jobType").value = "Regular cleaning";
     document.getElementById("jobPrice").value = "";
     document.getElementById("jobNotes").value = "";
 
@@ -1119,6 +1016,7 @@ function cancelJobEdit(){
 }
 
 function renderJobs(){
+
     const box = document.getElementById("jobList");
 
     if(jobs.length === 0){
@@ -1127,19 +1025,36 @@ function renderJobs(){
     }
 
     box.innerHTML = jobs.map((j,i)=>`
+
         <div class="list-item">
+
             <div class="list-title">
                 ${esc(j.type || "Cleaning")} — ${esc(clientName(j.clientId))}
             </div>
+
             <div class="muted">
-                ${esc(j.date)} ${j.time ? " • " + esc(j.time) : ""} • ${money(j.price)}
+                ${esc(j.date)}
+                ${j.time ? " • " + esc(j.time) : ""}
+                • ${money(j.price)}
             </div>
-            ${j.notes ? `<div class="muted">${esc(j.notes)}</div>` : ""}
+
+            ${j.notes ?
+                `<div class="muted">${esc(j.notes)}</div>` : ""}
+
             <div class="actions">
-                <button class="primary" type="button" onclick="editJob(${i})">Edit</button>
-                <button class="danger" type="button" onclick="deleteJob(${i})">Delete</button>
+
+                <button class="primary" type="button" onclick="editJob(${i})">
+                    Edit
+                </button>
+
+                <button class="danger" type="button" onclick="deleteJob(${i})">
+                    Delete
+                </button>
+
             </div>
+
         </div>
+
     `).join("");
 }
 
@@ -1149,6 +1064,7 @@ function renderJobs(){
 ========================= */
 
 function saveEstimate(){
+
     const clientId = document.getElementById("estimateClient").value;
 
     if(!clientId){
@@ -1157,12 +1073,21 @@ function saveEstimate(){
     }
 
     const estimate = {
-        id: editEstimateIndex === -1 ? newId() : estimates[editEstimateIndex].id,
+
+        id: editEstimateIndex === -1
+            ? newId()
+            : estimates[editEstimateIndex].id,
+
         clientId,
+
         date: document.getElementById("estimateDate").value,
+
         valid: document.getElementById("estimateValid").value,
+
         amount: Number(document.getElementById("estimateAmount").value || 0),
+
         notes: document.getElementById("estimateNotes").value.trim()
+
     };
 
     if(editEstimateIndex === -1){
@@ -1177,6 +1102,7 @@ function saveEstimate(){
 }
 
 function editEstimate(index){
+
     const e = estimates[index];
 
     document.getElementById("estimateClient").value = e.clientId;
@@ -1195,16 +1121,19 @@ function editEstimate(index){
 }
 
 function deleteEstimate(index){
+
     if(!confirm("Delete this estimate?")){
         return;
     }
 
     estimates.splice(index,1);
+
     saveData();
     renderEstimates();
 }
 
 function cancelEstimateEdit(){
+
     editEstimateIndex = -1;
 
     document.getElementById("estimateClient").value = "";
@@ -1218,6 +1147,7 @@ function cancelEstimateEdit(){
 }
 
 function renderEstimates(){
+
     const box = document.getElementById("estimateList");
 
     if(estimates.length === 0){
@@ -1226,19 +1156,36 @@ function renderEstimates(){
     }
 
     box.innerHTML = estimates.map((e,i)=>`
+
         <div class="list-item">
+
             <div class="list-title">
                 Estimate — ${esc(clientName(e.clientId))}
             </div>
+
             <div class="muted">
-                Date: ${esc(e.date)} ${e.valid ? " • Valid until: " + esc(e.valid) : ""} • ${money(e.amount)}
+                Date: ${esc(e.date)}
+                ${e.valid ? " • Valid until: " + esc(e.valid) : ""}
+                • ${money(e.amount)}
             </div>
-            ${e.notes ? `<div class="muted">${esc(e.notes)}</div>` : ""}
+
+            ${e.notes ?
+                `<div class="muted">${esc(e.notes)}</div>` : ""}
+
             <div class="actions">
-                <button class="primary" onclick="editEstimate(${i})">Edit</button>
-                <button class="danger" onclick="deleteEstimate(${i})">Delete</button>
+
+                <button class="primary" onclick="editEstimate(${i})">
+                    Edit
+                </button>
+
+                <button class="danger" onclick="deleteEstimate(${i})">
+                    Delete
+                </button>
+
             </div>
+
         </div>
+
     `).join("");
 }
 
@@ -1248,6 +1195,7 @@ function renderEstimates(){
 ========================= */
 
 function saveInvoice(){
+
     const clientId = document.getElementById("invoiceClient").value;
 
     if(!clientId){
@@ -1256,14 +1204,25 @@ function saveInvoice(){
     }
 
     const invoice = {
-        id: editInvoiceIndex === -1 ? newId() : invoices[editInvoiceIndex].id,
+
+        id: editInvoiceIndex === -1
+            ? newId()
+            : invoices[editInvoiceIndex].id,
+
         clientId,
+
         number: document.getElementById("invoiceNumber").value.trim(),
+
         date: document.getElementById("invoiceDate").value,
+
         due: document.getElementById("invoiceDue").value,
+
         amount: Number(document.getElementById("invoiceAmount").value || 0),
+
         status: document.getElementById("invoiceStatus").value,
+
         notes: document.getElementById("invoiceNotes").value.trim()
+
     };
 
     if(editInvoiceIndex === -1){
@@ -1278,6 +1237,7 @@ function saveInvoice(){
 }
 
 function editInvoice(index){
+
     const i = invoices[index];
 
     document.getElementById("invoiceClient").value = i.clientId;
@@ -1298,22 +1258,30 @@ function editInvoice(index){
 }
 
 function deleteInvoice(index){
+
     if(!confirm("Delete this invoice?")){
         return;
     }
 
     invoices.splice(index,1);
+
     saveData();
     renderInvoices();
 }
 
 function toggleInvoicePaid(index){
-    invoices[index].status = invoices[index].status === "paid" ? "unpaid" : "paid";
+
+    invoices[index].status =
+        invoices[index].status === "paid"
+        ? "unpaid"
+        : "paid";
+
     saveData();
     renderInvoices();
 }
 
 function cancelInvoiceEdit(){
+
     editInvoiceIndex = -1;
 
     document.getElementById("invoiceClient").value = "";
@@ -1329,6 +1297,7 @@ function cancelInvoiceEdit(){
 }
 
 function renderInvoices(){
+
     const box = document.getElementById("invoiceList");
 
     if(invoices.length === 0){
@@ -1337,27 +1306,53 @@ function renderInvoices(){
     }
 
     box.innerHTML = invoices.map((i,index)=>`
+
         <div class="list-item">
+
             <div class="list-title">
-                ${esc(i.number || "Invoice")} — ${esc(clientName(i.clientId))}
+                ${esc(i.number || "Invoice")} —
+                ${esc(clientName(i.clientId))}
             </div>
+
             <div class="muted">
-                ${esc(i.date)} ${i.due ? " • Due " + esc(i.due) : ""} • ${money(i.amount)}
+                ${esc(i.date)}
+                ${i.due ? " • Due " + esc(i.due) : ""}
+                • ${money(i.amount)}
             </div>
+
             <div style="margin-top:8px">
                 <span class="badge ${i.status}">
                     ${i.status === "paid" ? "PAID" : "UNPAID"}
                 </span>
             </div>
-            ${i.notes ? `<div class="muted">${esc(i.notes)}</div>` : ""}
+
+            ${i.notes ?
+                `<div class="muted">${esc(i.notes)}</div>` : ""}
+
             <div class="actions">
-                <button class="primary" onclick="editInvoice(${index})">Edit</button>
-                <button class="${i.status === "paid" ? "secondary" : "success"}" onclick="toggleInvoicePaid(${index})">
-                    ${i.status === "paid" ? "Mark unpaid" : "Mark paid"}
+
+                <button class="primary" onclick="editInvoice(${index})">
+                    Edit
                 </button>
-                <button class="danger" onclick="deleteInvoice(${index})">Delete</button>
+
+                <button
+                    class="${i.status === "paid" ? "secondary" : "success"}"
+                    onclick="toggleInvoicePaid(${index})">
+
+                    ${i.status === "paid"
+                        ? "Mark unpaid"
+                        : "Mark paid"}
+
+                </button>
+
+                <button class="danger" onclick="deleteInvoice(${index})">
+                    Delete
+                </button>
+
             </div>
+
         </div>
+
     `).join("");
 }
 
@@ -1367,7 +1362,10 @@ function renderInvoices(){
 ========================= */
 
 function saveExpense(){
-    const amount = Number(document.getElementById("expenseAmount").value || 0);
+
+    const amount = Number(
+        document.getElementById("expenseAmount").value || 0
+    );
 
     if(amount <= 0){
         alert("Please enter an expense amount");
@@ -1375,11 +1373,20 @@ function saveExpense(){
     }
 
     const expense = {
-        id: editExpenseIndex === -1 ? newId() : expenses[editExpenseIndex].id,
+
+        id: editExpenseIndex === -1
+            ? newId()
+            : expenses[editExpenseIndex].id,
+
         date: document.getElementById("expenseDate").value,
+
         category: document.getElementById("expenseCategory").value,
+
         amount,
-        description: document.getElementById("expenseDescription").value.trim()
+
+        description:
+            document.getElementById("expenseDescription").value.trim()
+
     };
 
     if(editExpenseIndex === -1){
@@ -1394,6 +1401,7 @@ function saveExpense(){
 }
 
 function editExpense(index){
+
     const e = expenses[index];
 
     document.getElementById("expenseDate").value = e.date;
@@ -1411,16 +1419,19 @@ function editExpense(index){
 }
 
 function deleteExpense(index){
+
     if(!confirm("Delete this expense?")){
         return;
     }
 
     expenses.splice(index,1);
+
     saveData();
     renderExpenses();
 }
 
 function cancelExpenseEdit(){
+
     editExpenseIndex = -1;
 
     document.getElementById("expenseDate").value = today();
@@ -1433,6 +1444,7 @@ function cancelExpenseEdit(){
 }
 
 function renderExpenses(){
+
     const box = document.getElementById("expenseList");
 
     if(expenses.length === 0){
@@ -1441,19 +1453,34 @@ function renderExpenses(){
     }
 
     box.innerHTML = expenses.map((e,i)=>`
+
         <div class="list-item">
+
             <div class="list-title">
                 ${esc(e.category)} — ${money(e.amount)}
             </div>
+
             <div class="muted">
                 ${esc(e.date)}
             </div>
-            ${e.description ? `<div class="muted">${esc(e.description)}</div>` : ""}
+
+            ${e.description ?
+                `<div class="muted">${esc(e.description)}</div>` : ""}
+
             <div class="actions">
-                <button class="primary" onclick="editExpense(${i})">Edit</button>
-                <button class="danger" onclick="deleteExpense(${i})">Delete</button>
+
+                <button class="primary" onclick="editExpense(${i})">
+                    Edit
+                </button>
+
+                <button class="danger" onclick="deleteExpense(${i})">
+                    Delete
+                </button>
+
             </div>
+
         </div>
+
     `).join("");
 }
 
@@ -1463,9 +1490,21 @@ function renderExpenses(){
 ========================= */
 
 function updateDashboard(){
-    const paid = invoices.filter(i => i.status === "paid").reduce((sum,i)=>sum + Number(i.amount || 0),0);
-    const unpaid = invoices.filter(i => i.status !== "paid").reduce((sum,i)=>sum + Number(i.amount || 0),0);
-    const expense = expenses.reduce((sum,e)=>sum + Number(e.amount || 0),0);
+
+    const paid =
+        invoices
+            .filter(i => i.status === "paid")
+            .reduce((sum,i)=>sum + Number(i.amount || 0),0);
+
+    const unpaid =
+        invoices
+            .filter(i => i.status !== "paid")
+            .reduce((sum,i)=>sum + Number(i.amount || 0),0);
+
+    const expense =
+        expenses
+            .reduce((sum,e)=>sum + Number(e.amount || 0),0);
+
     const profit = paid - expense;
 
     document.getElementById("paidTotal").textContent = money(paid);
@@ -1477,31 +1516,48 @@ function updateDashboard(){
 }
 
 function renderUpcomingJobs(){
+
     const box = document.getElementById("upcomingJobs");
 
     const upcoming = jobs
         .map((j,i)=>({j,i}))
         .filter(x => x.j.date >= today())
-        .sort((a,b)=>(a.j.date + (a.j.time || "")).localeCompare(b.j.date + (b.j.time || "")))
+        .sort((a,b)=>
+            (a.j.date + (a.j.time || ""))
+            .localeCompare(b.j.date + (b.j.time || ""))
+        )
         .slice(0,10);
 
     if(upcoming.length === 0){
-        box.innerHTML = `<div class="empty">No upcoming cleaning jobs</div>`;
+        box.innerHTML =
+            `<div class="empty">No upcoming cleaning jobs</div>`;
         return;
     }
 
     box.innerHTML = upcoming.map(({j,i})=>`
+
         <div class="list-item">
+
             <div class="list-title">
-                ${esc(j.date)} ${j.time ? " " + esc(j.time) : ""} — ${esc(clientName(j.clientId))}
+                ${esc(j.date)}
+                ${j.time ? " " + esc(j.time) : ""}
+                — ${esc(clientName(j.clientId))}
             </div>
+
             <div class="muted">
                 ${esc(j.type || "Cleaning")} — ${money(j.price)}
             </div>
+
             <div class="actions">
-                <button class="primary" onclick="editJob(${i})">Edit</button>
+
+                <button class="primary" onclick="editJob(${i})">
+                    Edit
+                </button>
+
             </div>
+
         </div>
+
     `).join("");
 }
 
@@ -1511,8 +1567,7 @@ function renderUpcomingJobs(){
 ========================= */
 
 function refreshAll(){
-    renderServices();
-    updateJobTypeSelector();
+
     renderClients();
     updateClientSelectors();
     renderJobs();
@@ -1528,12 +1583,14 @@ function refreshAll(){
 ========================= */
 
 document.addEventListener("DOMContentLoaded", () => {
+
     document.getElementById("jobDate").value = today();
     document.getElementById("estimateDate").value = today();
     document.getElementById("invoiceDate").value = today();
     document.getElementById("expenseDate").value = today();
 
     refreshAll();
+
 });
 
 
@@ -1549,3 +1606,6 @@ window.addEventListener("beforeunload", () => {
 
 </body>
 </html>
+
+
+I want this but i want to be able to add edit and remove everything including services
