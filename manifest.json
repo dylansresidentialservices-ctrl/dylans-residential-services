@@ -1,0 +1,16 @@
+{
+  "name": "Dylan's Residential Services",
+  "short_name": "DRS Manager",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0d1215",
+  "theme_color": "#0077cc",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/2910/2910791.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
